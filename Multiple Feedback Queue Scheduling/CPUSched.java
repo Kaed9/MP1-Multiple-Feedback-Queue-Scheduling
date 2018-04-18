@@ -3,7 +3,7 @@ public class CPUSched {
 	private final Process[] process;
 	private Process[] copy;
 
-	// private QueuesPanel queuesPanel;
+	private QueuesPanel queuesPanel;
 	
 	public CPUSched(Process[] process) {
 		this.process = process;
@@ -20,12 +20,12 @@ public class CPUSched {
 	}
 	
 	//CPU Scheduling Algorithm
-	public void FCFS(){
+	public Process[] FCFS(){
 		check();
-		Process temp[] = process;
+		Process[] temp = process;
 		//sort arrival Time
 		quicksort(temp, 0, temp.length-1, 0);
-		
+		/*
 		new Thread() {
 			public void run() {
 				try {
@@ -38,8 +38,8 @@ public class CPUSched {
 							}else{
 								queue.enqueue(temp[i]);
 								System.out.print(temp[i].getBurstTime()+" ");
+								// queuesPanel.addToQueue(" ", i);
 							}
-							// queuesPanel.addToQueue("-", i);
 							Thread.sleep(100);
 						}
 						// queuesPanel.addToQueue("" + temp[i].getProcessID(), i);
@@ -48,8 +48,9 @@ public class CPUSched {
 				} catch(InterruptedException iEx) { }
 			}
 		}.start();
+		*/
 		
-		/*for(int i = 0; i < temp.length; i++){
+		for(int i = 0; i < temp.length; i++){
 			for(int j = 0; j < temp[i].getBurstTime(); j++){
 				//initializeProcess
 				if(j == 0){
@@ -61,29 +62,59 @@ public class CPUSched {
 				}				
 			}
 		}
-		check();*/
+		check();
+
+		return temp;
 	}
 	
 	public void SJF(){
-		Process[] burst = process;
+		Process[] temp = process;
+		int burst[] = new int[process.length], last = 0, arrival[] = new int[process.length];
+		boolean isAvailable[] = new boolean[process.length];
 		
-		//sort burst time
-		quicksort(burst, 0, burst.length-1, 1);
-
-		for(int i = 0; i < burst.length; i++){
-			for(int j = 0; j < burst[i].getBurstTime(); j++){
-				//initializeProcess
-				if(j == 0){
-					queue.initialProcess(burst[i]);
-					System.out.print(burst[i].getBurstTime()+" ");
-				}else{
-					queue.enqueue(burst[i]);
-					System.out.print(burst[i].getBurstTime()+" ");
-				}				
-			}	
+		quicksort(temp, 0, temp.length-1, 0);
+		for(int i =0; i< process.length; i++){
+			burst[i] = 0;
+			arrival[i] = temp[i].getArrivalTime();
 		}
 		
-		check();
+		for(int i = 0; i < temp.length; i++){			
+			if(i == 0 && getSmallestNum(arrival, 1) != -1){
+				for(int j = 0; j < temp[i].getBurstTime(); j++){
+					if(j == 0){
+						queue.initialProcess(temp[i]); 
+						System.out.print(temp[i].getProcessID()+" ");
+					}else{
+						queue.enqueue(temp[i]); 
+						System.out.print(temp[i].getProcessID()+" ");
+					}
+				}
+				last+= temp[i].getBurstTime();				
+				burst[i] = -1;		
+				
+			}else{
+				for(int j = 1; j< temp.length; j++){
+					if(last >= temp[j].getArrivalTime() && burst[j] != -1){
+						isAvailable[j] = true;
+				
+						burst[j] = temp[j].getBurstTime();						
+					}	
+				}						
+				boolean flag = false;
+				
+				for(int j = 0; j < temp.length; j++){					
+					if(isAvailable[j] == true && burst[j] == getSmallestNum(burst, 0)&& flag == false){						
+						for(int k = 0; k < temp[j].getBurstTime(); k++){
+							queue.enqueue(temp[j]);
+							System.out.print(temp[j].getProcessID ()+" ");
+						}
+						last+=temp[j].getBurstTime();
+						burst[j] = -1;
+						flag = true;
+					}else{continue;}
+				}
+			}	
+		} 
 	}
 	
 	public void STRF(){
@@ -340,9 +371,9 @@ public class CPUSched {
 		arr[j] = temp;
 	}
 	
-	/*
+	
 	public static void main(String[] args){
-		Process p[] = {new Process(7,5,9), new Process(5, 1,2), new Process(3, 2,5), new Process(1,0,1), new Process(2,4,6), new Process(1,3,10)}; 
+		Process p[] = {new Process(1, 5, 7, 9), new Process(2, 1, 5, 2), new Process(3, 2, 3, 5), new Process(4, 0, 1, 1), new Process(5, 4, 2, 6), new Process(6, 3, 1, 10)}; 
 		CPUSched sched = new CPUSched(p);
 		//process	arrival		burst		priority
 		//  p1 		   5		  7				9
@@ -370,5 +401,5 @@ public class CPUSched {
 		//System.out.println("\ntem = "+tem);
 		
 	}
-	*/
+	
 }

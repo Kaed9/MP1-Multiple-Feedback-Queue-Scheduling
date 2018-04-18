@@ -132,7 +132,7 @@ public class ProcessControlBlock extends JPanel {
 
 	public void generateProcesses(int maxProcesses, String checker, String s1, String s2, String s3) {
 
-		if(checker.equals("randomized")) {
+		/*if(checker.equals("randomized")) {
 			processList = new Process[maxProcesses];
 			int maxBurst = 50;
 
@@ -148,13 +148,13 @@ public class ProcessControlBlock extends JPanel {
 
 			for(int i = 0; i < maxProcesses; i++) {
 				// System.out.println(processList[i].getProcessID() + "\t" + processList[i].getArrivalTime() + "\t" +  processList[i].getBurstTime() + "\t" +  processList[i].getPriority() + "\t" +  processList[i].getHistoryInfo());
-				table[0].append("   " + processList[i].getProcessID() + "\n");
+				table[0].append("   P" + processList[i].getProcessID() + "\n");
 				table[1].append("      " + processList[i].getArrivalTime() + "\n");
 				table[2].append("    " + processList[i].getBurstTime() + "\n");
 				table[3].append("      " + processList[i].getPriority() + "\n");
 				table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 			}
-		} else if(checker.equals("user-defined")) {
+		} else if(checker.equals("user-defined")) {*/
 			int[] t1 = new int[maxProcesses];
 			int[] t2 = new int[maxProcesses];
 			int[] t3 = new int[maxProcesses];
@@ -189,7 +189,7 @@ public class ProcessControlBlock extends JPanel {
 				table[3].append("      " + processList[i].getPriority() + "\n");
 				table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 			}
-		}
+		// }
 	}
 
 	public Process[] getProcessList() {

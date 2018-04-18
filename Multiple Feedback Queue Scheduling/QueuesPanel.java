@@ -2,22 +2,34 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.border.*;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
+import java.util.Random;
+// import javax.swing.text.DefaultCaret;
+// import javax.swing.text.AttributeSet;
+// import javax.swing.text.SimpleAttributeSet;
+// import javax.swing.text.StyleConstants;
+// import javax.swing.text.StyleContext;
+// import javax.swing.text.StyledDocument;
 
 public class QueuesPanel extends JPanel {
 	
 	private JLabel label, q1, q2, q3;
-	private JPanel panel, queuesPanel;
-	private JTextPane textPane;
+	private JPanel panel, queuesPanel, quPane1;
+	// private JTextPane textPane;
 	private JScrollPane scrollPane;
+	private JScrollBar bar;
+
+	// private JPanel[] panelArr = new JPanel[100];
+	// private JLabel[] labelArr = new JLabel[100];
+	private JPanel[][] panelArr;
+	private JLabel[][] labelArr;
 	
 	private Font font = new Font("Verdana", Font.BOLD, 38);
 	private Font font1 = new Font("Verdana", Font.BOLD, 30);
+	private Font font2 = new Font("Verdana", Font.PLAIN, 20);
+
+	private AdjustmentListener listener = new MyAdjustmentListener();
+	private int value = 1;
+	private Random rand = new Random();
 	
 	public QueuesPanel() {
 		
@@ -33,8 +45,8 @@ public class QueuesPanel extends JPanel {
 		
 		add(label);
 
-		// queuesPart();
-		// queuesHolder();
+		queuesPart();
+		queuesHolder();
 		// addToQueue();
 	}
 	
@@ -53,7 +65,7 @@ public class QueuesPanel extends JPanel {
 		q2.setLocation(20, 200);
 		
 		q3 = new JLabel("Q3", JLabel.CENTER);
-		q3.setFont(font);
+		q3.setFont(font);y
 		q3.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, Color.lightGray));
 		q3.setSize(80, 80);
 		q3.setLocation(20, 280);
@@ -66,6 +78,23 @@ public class QueuesPanel extends JPanel {
 	
 	public void queuesHolder() {
 		
+		quPane1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+		scrollPane = new JScrollPane(quPane1, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,  JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+		panel = new JPanel(new BorderLayout());
+		// panel.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.lightGray));
+		panel.setBorder(BorderFactory.createEmptyBorder());
+		panel.setBounds(100, 120, 620, 70);
+
+		panel.add(scrollPane, BorderLayout.CENTER);
+		add(panel);
+
+		bar = scrollPane.getHorizontalScrollBar();
+		// bar.addAdjustmentListener(listener);
+
+		/*
 		textPane = new JTextPane();
 		textPane.setFont(font1);
 		textPane.setBorder(BorderFactory.createEmptyBorder());
@@ -81,6 +110,7 @@ public class QueuesPanel extends JPanel {
 		panel.setBounds(100, 120, 620, 260);
 
 		add(panel);
+		*/
 
 		/*
 		panel = new JPanel(new BorderLayout());
@@ -94,11 +124,62 @@ public class QueuesPanel extends JPanel {
 		add(panel);
 		*/
 	}
+
+	private class MyAdjustmentListener implements AdjustmentListener {
+		
+		public void adjustmentValueChanged(AdjustmentEvent e) {
+			
+			if(e.getSource() == bar && e.getAdjustmentType() == AdjustmentEvent.TRACK) {
+				int extent = scrollPane.getHorizontalScrollBar().getModel().getExtent();
+				// scrollPane.getHorizontalScrollBar().setValue(scrollPane.getHorizontalScrollBar().getValue() + extent);
+				// System.out.print(scrollPane.getHorizontalScrollBar().getWidth() + " ");
+			}
+		}
+	}
 	
-	public void addToQueue(String string, int i) {
+	public void addToQueue(Process[] temp) {
+
+		int maxBurstTime = 0;
+		for(int i = 0; i < temp.length; i++) {
+			maxBurstTime += temp[i].getBurstTime();
+		}
+
+		// bar.addAdjustmentListener(listener);
+		panelArr = new JPanel[temp.length][];
+		labelArr = new JLabel[temp.length][];
+
+		new Thread() {
+			public void run() {
+				Color color = null;
+				try {
+					for(int i = 0; i < temp.length; i++) {
+						panelArr[i] = new JPanel[temp[i].getBurstTime()];
+						labelArr[i] = new JLabel[temp[i].getBurstTime()];
+						color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+						for(int j = 0; j < temp[i].getBurstTime(); j++) {
+							repaint();
+							revalidate();
+							labelArr[i][j] = new JLabel("P" + temp[i].getProcessID());
+							labelArr[i][j].setOpaque(true);
+							labelArr[i][j].setBackground(color);
+							labelArr[i][j].setFont(font2);
+							labelArr[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+
+							panelArr[i][j] = new JPanel();
+							panelArr[i][j].add(labelArr[i][j]);
+
+							quPane1.add(panelArr[i][j]);
+
+							Thread.sleep(100);
+						}
+
+					}
+				} catch(InterruptedException iEx) { }
+			}
+		}.start();
 
 		// textPane.setText("1    ");
-
+		/*
 		StyledDocument document = textPane.getStyledDocument();
 
 		SimpleAttributeSet attrib = new SimpleAttributeSet();
@@ -128,6 +209,8 @@ public class QueuesPanel extends JPanel {
 				document.insertString(document.getLength(), "_", null);
 			}
 		} catch(Exception ex) { }
+		*/
 
+		// bar.removeAdjustmentListener(listener);
 	}
 }

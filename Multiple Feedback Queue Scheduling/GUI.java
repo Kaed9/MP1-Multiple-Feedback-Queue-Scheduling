@@ -58,6 +58,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		imp = new JMenuItem("Implement MLFQ");
 		imp.setMnemonic(KeyEvent.VK_I);
+		imp.setEnabled(false);
 
 		exit = new JMenuItem("Exit");
 		exit.setMnemonic(KeyEvent.VK_X);
@@ -128,16 +129,21 @@ public class GUI extends JFrame implements ActionListener {
 				// System.out.println(inputs[0] + " " + inputs[1]);
 				int maxProcesses = Integer.parseInt(inputs[0]);
 				processControlBlock.generateProcesses(maxProcesses, inputs[1], inputs[2], inputs[3], inputs[4]);
+				imp.setEnabled(true);
 				// sched = new CPUSched(processControlBlock.getProcessList());
 				// System.out.println("FCFS");
 				// sched.FCFS(queuesPanel);
 			} else { }
 		} else if(event.getSource() == clear) {
 			processControlBlock.clearTables();
+			imp.setEnabled(false);
 		} else if(event.getSource() == imp) {
+			// queuesPanel.addToQueue();
+			//JOptionPaneExample.displayGUI1();
 			sched = new CPUSched(processControlBlock.getProcessList());
 			System.out.println("FCFS");
-			sched.FCFS();
+			Process[] temp = sched.FCFS();
+			queuesPanel.addToQueue(temp);
 		} else if(event.getSource() == exit) {
 			System.exit(0);
 		}

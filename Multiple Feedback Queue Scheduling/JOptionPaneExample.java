@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 // import javax.imageio.ImageIO;
 import java.awt.event.*;
+import java.util.Random;
 
 public class JOptionPaneExample {
 
@@ -18,24 +19,28 @@ public class JOptionPaneExample {
     private static JTextArea[] area = new JTextArea[4];
     private static JLabel[] label = new JLabel[4];
 
+    private static JPanel panel1;
+
     private static String[] inputs = new String[5];
     private static String[] strings = {"PID", "Arrival Time", "CPU Burst Time", "Priority"};
+    private static Object[] values = {"Submit", "Cancel"};
+
+    private static Random rand = new Random();
 
     public static String[] displayGUI() {
 
-        Object[] values = {"Submit", "Cancel"};
-        UIManager.put("OptionPane.minimumSize", new Dimension(500, 550)); 
-        int value = JOptionPane.showOptionDialog(null, getPanel(), "JOptionPane Example : ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, values, values[0]);
+        // UIManager.put("JOptionPane.minimumSize", new Dimension(500, 550)); 
+        int value = JOptionPane.showOptionDialog(null, getPanel(), "Generate Processes", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, values, values[0]);
         if(value == 0) {
-            if(inputs[1] == "user-defined") {
-                inputs[2] = area[1].getText();
-                inputs[3] = area[2].getText();
-                inputs[4] = area[3].getText();
-            } else if(inputs[1] == "randomized") {
+            // if(inputs[1] == "user-defined") {
+            inputs[2] = area[1].getText();
+            inputs[3] = area[2].getText();
+            inputs[4] = area[3].getText();
+            /*} else if(inputs[1] == "randomized") {
                 inputs[2] = " ";
                 inputs[3] = " ";
                 inputs[4] = " ";
-            }
+            }*/
         }
 
         return inputs;
@@ -44,6 +49,7 @@ public class JOptionPaneExample {
     private static JPanel getPanel() {
 
         panel = new JPanel(new BorderLayout());
+        panel.setPreferredSize(new Dimension(500, 550));
         /*JLabel label = new JLabel("Java Technology Dive Log");
         ImageIcon image = null;
         try {
@@ -98,7 +104,7 @@ public class JOptionPaneExample {
                 try {
                     int num = Integer.parseInt(string);
 
-                    if(num >= 0 || num <= 20) {
+                    if(num >= 0 && num <= 20) {
                         button.setEnabled(false);
                         field.setEnabled(false);
                         random.setEnabled(true);
@@ -106,11 +112,12 @@ public class JOptionPaneExample {
                         // System.out.println(field.getText());
                         inputs[0] = field.getText();
                     } else {
-                        System.out.println("Select a number between 0 to 20!");
+                        // System.out.println("Select a number between 0 to 20!");
+                        JOptionPane.showMessageDialog(null, "Select a number between 0 to 20!", "Number Boundary Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch(NumberFormatException nfEx) {
-                    System.out.println("Input not a number!");
-                    // JOptionPane.showMessageDialog(null, "Input not an number!", "NumberFormatException", JOptionPane.ERROR_MESSAGE);
+                    // System.out.println("Input not a number!");
+                    JOptionPane.showMessageDialog(null, "Input not an number!", "Number Format Exception", JOptionPane.ERROR_MESSAGE);
                 }
                 // if(string )
             }
@@ -122,6 +129,46 @@ public class JOptionPaneExample {
                 inputs[1] = e.getActionCommand();
                 random.setEnabled(false);
                 defined.setEnabled(false);
+
+                int max = Integer.parseInt(field.getText());
+                String temp = "", temp1 = "", temp2 = "", temp3 = "";
+
+                for(int i = 0; i < 4; i++) {
+                    pane[i] = new JPanel(new BorderLayout());
+
+                    label[i] = new JLabel(strings[i]);
+                    area[i] = new JTextArea(max, 5);
+
+                    pane[i].add(label[i], BorderLayout.NORTH);
+                    pane[i].add(area[i], BorderLayout.CENTER);
+
+                    third.add(pane[i]);
+                }
+                area[0].setEditable(false);
+                area[0].setBackground(Color.lightGray);
+
+                for(int i = 0; i < max; i++) {
+                    if(i != max - 1)
+                        temp += "" + (i + 1) + "\n";
+                    else
+                        temp += "" + (i + 1);
+                    area[0].setText(temp);
+                }
+
+                for(int i = 0; i < max; i++) {
+                    if(i != max - 1) {
+                        temp1 += "" + rand.nextInt(50) + "\n";
+                        temp2 += "" + (rand.nextInt(50) + 1) + "\n";
+                        temp3 += "" + (rand.nextInt(40) + 1) + "\n";
+                    } else {
+                        temp1 += "" + rand.nextInt(50);
+                        temp2 += "" + (rand.nextInt(50) + 1);
+                        temp3 += "" + (rand.nextInt(40) + 1);
+                    }
+                    area[1].setText(temp1);
+                    area[2].setText(temp2);
+                    area[3].setText(temp3);
+                }
             }
         });
 
@@ -147,6 +194,7 @@ public class JOptionPaneExample {
                     third.add(pane[i]);
                 }
                 area[0].setEditable(false);
+                area[0].setBackground(Color.lightGray);
 
                 for(int i = 0; i < max; i++) {
                     if(i != max - 1)
@@ -161,13 +209,26 @@ public class JOptionPaneExample {
         return panel;
     }
 
+    public static void displayGUI1() {
+
+        UIManager.put("JOptionPane.minimumSize", new Dimension(600, 300)); 
+        int value = JOptionPane.showOptionDialog(null, getPanel1(), "Implement MLFQ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, values, values[0]);
+    }
+
+    private static JPanel getPanel1() {
+
+        panel1 = new JPanel(new BorderLayout());
+
+        return panel1;
+    }
+
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
 
-                new JOptionPaneExample().displayGUI();
+                new JOptionPaneExample().displayGUI1();
             }
         });
     }
