@@ -19,11 +19,22 @@ public class JOptionPaneExample {
     private static JTextArea[] area = new JTextArea[4];
     private static JLabel[] label = new JLabel[4];
 
-    private static JPanel panel1;
+    private static JPanel panel1, top1, first1, second1, third1, comboHold;
+    private static JLabel choose_queue, choose_policy, choose_algo;
+    private static JTextField field1;
+    private static JButton button1;
+    private static JRadioButton higher_lower, fixed;
+    private static ButtonGroup group1;
+    private static JComboBox[] comboBox;
+    private static JLabel[] boxName;
+    private static JPanel[] boxHold;
 
     private static String[] inputs = new String[5];
+    private static String[] inputs1 = new String[3];
     private static String[] strings = {"PID", "Arrival Time", "CPU Burst Time", "Priority"};
     private static Object[] values = {"Submit", "Cancel"};
+    private static String[] algorithms = {"First Come First Search", "Shortest Job First", "Shortest Remaining Time First", "Preemptive Priority Scheduling", "Non-preemptive Priority Scheduling", "Round Robin"};
+    private static int maxQueue;
 
     private static Random rand = new Random();
 
@@ -49,7 +60,7 @@ public class JOptionPaneExample {
     private static JPanel getPanel() {
 
         panel = new JPanel(new BorderLayout());
-        panel.setPreferredSize(new Dimension(500, 550));
+        panel.setPreferredSize(new Dimension(450, 450));
         /*JLabel label = new JLabel("Java Technology Dive Log");
         ImageIcon image = null;
         try {
@@ -119,7 +130,6 @@ public class JOptionPaneExample {
                     // System.out.println("Input not a number!");
                     JOptionPane.showMessageDialog(null, "Input not an number!", "Number Format Exception", JOptionPane.ERROR_MESSAGE);
                 }
-                // if(string )
             }
         });
 
@@ -209,15 +219,163 @@ public class JOptionPaneExample {
         return panel;
     }
 
-    public static void displayGUI1() {
+    public static String[] displayGUI1() {
 
-        UIManager.put("JOptionPane.minimumSize", new Dimension(600, 300)); 
+        // UIManager.put("JOptionPane.minimumSize", new Dimension(600, 300));
         int value = JOptionPane.showOptionDialog(null, getPanel1(), "Implement MLFQ", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, values, values[0]);
+        if(value == 0) {
+            inputs1[0] = field1.getText();
+            inputs1[2] = "";
+            for(int i = 0; i < maxQueue; i++) {
+                inputs1[2] += String.valueOf(comboBox[i].getSelectedItem()) + "\n";
+                // System.out.println(String.valueOf(comboBox[i].getSelectedItem()));
+            }
+
+            // System.out.println(inputs1[0]);
+            // System.out.println(inputs1[1]);
+            // System.out.println(inputs1[2]);
+        }
+
+        return inputs1;
     }
 
     private static JPanel getPanel1() {
 
         panel1 = new JPanel(new BorderLayout());
+        panel1.setPreferredSize(new Dimension(450, 300));
+
+        choose_queue = new JLabel("Enter number of queues: ");
+        field1 = new JTextField(4);
+        button1 = new JButton("OK");
+        //
+        field1.setText("1");
+        field1.setEditable(false);
+        //
+        first1 = new JPanel();
+        first1.add(choose_queue);
+        first1.add(field1);
+        first1.add(button1);
+
+        choose_policy = new JLabel("Choose priority policy: ");
+        higher_lower = new JRadioButton("Higher before lower");
+        higher_lower.setActionCommand("higher_lower");
+        higher_lower.setEnabled(false);
+        fixed = new JRadioButton("Fixed time slots");
+        fixed.setActionCommand("fixed");
+        fixed.setEnabled(false);
+
+        group1 = new ButtonGroup();
+        group1.add(higher_lower);
+        group1.add(fixed); 
+
+        second1 = new JPanel();
+        second1.add(choose_policy);
+        second1.add(higher_lower);
+        second1.add(fixed);
+
+        comboHold = new JPanel();
+
+        choose_algo = new JLabel("Choose classical scheduling algorithm for each queue:");
+
+        third1 = new JPanel(new BorderLayout());
+        third1.add(choose_algo, BorderLayout.NORTH);
+        third1.add(comboHold, BorderLayout.CENTER);
+
+        top1 = new JPanel(new BorderLayout());
+        top1.add(first1, BorderLayout.NORTH);
+        top1.add(second1, BorderLayout.SOUTH);
+
+        panel1.add(top1, BorderLayout.NORTH);
+        panel1.add(third1, BorderLayout.CENTER);
+
+        button1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String string = field1.getText();
+
+                try {
+                    int num = Integer.parseInt(string);
+                    button1.setEnabled(false);
+                    // field1.setEnabled(false);
+                    higher_lower.setEnabled(true);
+                    fixed.setEnabled(true);
+                } catch(NumberFormatException nfEx) {
+                    // System.out.println("Input not a number!");
+                    JOptionPane.showMessageDialog(null, "Input not an number!", "Number Format Exception", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        higher_lower.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                higher_lower.setEnabled(false);
+                fixed.setEnabled(false);
+
+                inputs1[1] = e.getActionCommand();
+                int maximum = Integer.parseInt(field1.getText());
+                maxQueue = maximum;
+                boxName = new JLabel[maximum];
+                comboBox = new JComboBox[maximum];
+                boxHold = new JPanel[maximum];
+                for(int i = 0; i < maximum; i++) {
+                    boxName[i] = new JLabel("Q" + (i + 1) + "\t");
+                    comboBox[i] = new JComboBox(algorithms);
+                    comboBox[i].setSelectedIndex(0);
+
+                    boxHold[i] = new JPanel(new BorderLayout());
+                    boxHold[i].add(boxName[i], BorderLayout.WEST);
+                    boxHold[i].add(comboBox[i], BorderLayout.CENTER);
+                    comboHold.add(boxHold[i]);
+                    comboHold.repaint();
+                    comboHold.revalidate();
+                }
+
+                for(int i = 0; i < maximum; i++) {
+                    comboBox[i].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JComboBox cb = (JComboBox)e.getSource();
+                            String name = (String)cb.getSelectedItem();
+                            // System.out.println(name);
+                        }
+                    });
+                }
+            }
+        });
+
+        fixed.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                higher_lower.setEnabled(false);
+                fixed.setEnabled(false);
+
+                inputs1[1] = e.getActionCommand();
+                int maximum = Integer.parseInt(field1.getText());
+                maxQueue = maximum;
+                boxName = new JLabel[maximum];
+                comboBox = new JComboBox[maximum];
+                boxHold = new JPanel[maximum];
+                for(int i = 0; i < maximum; i++) {
+                    boxName[i] = new JLabel("Q" + (i + 1) + "\t");
+                    comboBox[i] = new JComboBox(algorithms);
+                    comboBox[i].setSelectedIndex(0);
+
+                    boxHold[i] = new JPanel(new BorderLayout());
+                    boxHold[i].add(boxName[i], BorderLayout.WEST);
+                    boxHold[i].add(comboBox[i], BorderLayout.CENTER);
+                    comboHold.add(boxHold[i]);
+                    comboHold.repaint();
+                    comboHold.revalidate();
+                }
+
+                for(int i = 0; i < maximum; i++) {
+                    comboBox[i].addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JComboBox cb = (JComboBox)e.getSource();
+                            String name = (String)cb.getSelectedItem();
+                            // System.out.println(name);
+                        }
+                    });
+                }
+            }
+        });
 
         return panel1;
     }

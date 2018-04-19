@@ -67,7 +67,7 @@ public class CPUSched {
 		return temp;
 	}
 	
-	public void SJF(){
+	public Process[] SJF(){
 		Process[] temp = process;
 		int burst[] = new int[process.length], last = 0, arrival[] = new int[process.length];
 		boolean isAvailable[] = new boolean[process.length];
@@ -106,7 +106,7 @@ public class CPUSched {
 					if(isAvailable[j] == true && burst[j] == getSmallestNum(burst, 0)&& flag == false){						
 						for(int k = 0; k < temp[j].getBurstTime(); k++){
 							queue.enqueue(temp[j]);
-							System.out.print(temp[j].getProcessID ()+" ");
+							System.out.print(temp[j].getProcessID()+" ");
 						}
 						last+=temp[j].getBurstTime();
 						burst[j] = -1;
@@ -115,9 +115,16 @@ public class CPUSched {
 				}
 			}	
 		} 
+
+		for(int i = 0; i < process.length; i++) {
+			// temp[i] = queue.dequeue();
+			System.out.print("" + temp[i].getProcessID());
+		}
+
+		return temp;
 	}
 	
-	public void STRF(){
+	public Process[] STRF(){
 		Process[] temp = process;
 		boolean[] isAvailable = new boolean[temp.length];
 		int[] burst = new int[temp.length], tempB = new int[temp.length];
@@ -159,9 +166,11 @@ public class CPUSched {
 				}else {continue;}
 			}
 		}
+
+		return temp;
 	}
 	
-	public void NPrio(){
+	public Process[] NPrio(){
 		Process[] temp = process;	
 		int last = 0, prio[] = new int[process.length];
 		
@@ -202,6 +211,8 @@ public class CPUSched {
 				}
 			}
 		}
+
+		return temp;
 	}
 	
 	/* public void Prio(){				//gin comment ko la anay

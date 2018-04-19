@@ -102,7 +102,7 @@ public class GUI extends JFrame implements ActionListener {
 		queuesPanel = null;
 		queuesPanel = new QueuesPanel();
 		queuesPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-		queuesPanel.setBounds(540, 20, 740, 680);
+		queuesPanel.setBounds(540, 20, 740, 430);
 		// queuesPanel.setSize(740, 680);
 		// queuesPanel.setLocation(540, 20);
 		
@@ -110,15 +110,16 @@ public class GUI extends JFrame implements ActionListener {
 		// infos.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
 		// infos.setSize(740, 230);
 		// infos.setLocation(540, 470);
-		/*infoPanel = null;
+		infoPanel = null;
 		infoPanel = new InfoPanel();
 		infoPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
-		infoPanel.setSize(740, 230);
-		infoPanel.setLocation(540, 470);*/
+		infoPanel.setBounds(540, 470, 740, 230);
+		// infoPanel.setSize(740, 230);
+		// infoPanel.setLocation(540, 470);
 		
 		add(processControlBlock);
 		add(queuesPanel);
-		// add(infoPanel);
+		add(infoPanel);
 	}
 	
 	public void actionPerformed(ActionEvent event) {
@@ -139,17 +140,20 @@ public class GUI extends JFrame implements ActionListener {
 			imp.setEnabled(false);
 		} else if(event.getSource() == imp) {
 			// queuesPanel.addToQueue();
-			//JOptionPaneExample.displayGUI1();
+			// String[] inputs1 = JOptionPaneExample.displayGUI1();
+			// System.out.println(inputs1[0]);
+			// System.out.println(inputs1[1]);
+			// System.out.println(inputs1[2]);
 			sched = new CPUSched(processControlBlock.getProcessList());
-			System.out.println("FCFS");
-			Process[] temp = sched.FCFS();
+			System.out.println("SRTF");
+			Process[] temp = sched.NPrio();
 			queuesPanel.addToQueue(temp);
 		} else if(event.getSource() == exit) {
 			System.exit(0);
 		}
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		Runnable runner = new Runnable() {
 			public void run() {
