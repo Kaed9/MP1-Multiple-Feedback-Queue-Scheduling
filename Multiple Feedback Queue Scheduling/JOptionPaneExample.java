@@ -33,7 +33,7 @@ public class JOptionPaneExample {
     private static String[] inputs1 = new String[3];
     private static String[] strings = {"PID", "Arrival Time", "CPU Burst Time", "Priority"};
     private static Object[] values = {"Submit", "Cancel"};
-    private static String[] algorithms = {"First Come First Search", "Shortest Job First", "Shortest Remaining Time First", "Preemptive Priority Scheduling", "Non-preemptive Priority Scheduling", "Round Robin"};
+    private static String[] algorithms = {"First Come First Serve", "Shortest Job First", "Shortest Remaining Time First", "Preemptive Priority Scheduling", "Non-preemptive Priority Scheduling", "Round Robin"};
     private static int maxQueue;
 
     private static Random rand = new Random();

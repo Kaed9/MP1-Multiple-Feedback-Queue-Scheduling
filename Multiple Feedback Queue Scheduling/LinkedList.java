@@ -53,12 +53,16 @@ public class LinkedList{
 		return head;
 	}
 	
-	public void print(){ //Don't mind this
+	public Process[] print(){ //Don't mind this
 		Node n = head;
-		
+		Process temp[] = new Process[index];
+		int i = 0;
 		while (n != null){
-			System.out.println(n.getData()+ " ");
+			temp[i] = n.getData();
+			//System.out.println(n.getData().getArrivalTime()+ " ");
 			n = n.next;
+			i++;
 		}
+		return temp;
 	}
 }

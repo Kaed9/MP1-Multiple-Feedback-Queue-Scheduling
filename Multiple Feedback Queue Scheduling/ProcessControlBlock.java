@@ -155,40 +155,40 @@ public class ProcessControlBlock extends JPanel {
 				table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 			}
 		} else if(checker.equals("user-defined")) {*/
-			int[] t1 = new int[maxProcesses];
-			int[] t2 = new int[maxProcesses];
-			int[] t3 = new int[maxProcesses];
-			int index = 0;
+		int[] t1 = new int[maxProcesses];
+		int[] t2 = new int[maxProcesses];
+		int[] t3 = new int[maxProcesses];
+		int index = 0;
 
-			processList = new Process[maxProcesses];
+		processList = new Process[maxProcesses];
 
-			for(String ye : s1.split("\\s")) {
-				t1[index] = Integer.parseInt(ye);
-				index++;
-			}
-			index = 0;
-			for(String ye : s2.split("\\s")) {
-				t2[index] = Integer.parseInt(ye);
-				index++;
-			}
-			index = 0;
-			for(String ye : s3.split("\\s")) {
-				t3[index] = Integer.parseInt(ye);
-				index++;
-			}
+		for(String ye : s1.split("\\s")) {
+			t1[index] = Integer.parseInt(ye);
+			index++;
+		}
+		index = 0;
+		for(String ye : s2.split("\\s")) {
+			t2[index] = Integer.parseInt(ye);
+			index++;
+		}
+		index = 0;
+		for(String ye : s3.split("\\s")) {
+			t3[index] = Integer.parseInt(ye);
+			index++;
+		}
 
-			for(int i = 0; i < maxProcesses; i++) {
-				processList[i] = new Process((i + 1), t1[i], t2[i], t3[i]);
-			}
+		for(int i = 0; i < maxProcesses; i++) {
+			processList[i] = new Process((i + 1), t1[i], t2[i], t3[i]);
+		}
 
-			for(int i = 0; i < maxProcesses; i++) {
-				// System.out.println(processList[i].getProcessID() + "\t" + processList[i].getArrivalTime() + "\t" +  processList[i].getBurstTime() + "\t" +  processList[i].getPriority() + "\t" +  processList[i].getHistoryInfo());
-				table[0].append("   " + processList[i].getProcessID() + "\n");
-				table[1].append("      " + processList[i].getArrivalTime() + "\n");
-				table[2].append("    " + processList[i].getBurstTime() + "\n");
-				table[3].append("      " + processList[i].getPriority() + "\n");
-				table[4].append("          " + processList[i].getHistoryInfo() + "\n");
-			}
+		for(int i = 0; i < maxProcesses; i++) {
+			// System.out.println(processList[i].getProcessID() + "\t" + processList[i].getArrivalTime() + "\t" +  processList[i].getBurstTime() + "\t" +  processList[i].getPriority() + "\t" +  processList[i].getHistoryInfo());
+			table[0].append("   " + processList[i].getProcessID() + "\n");
+			table[1].append("      " + processList[i].getArrivalTime() + "\n");
+			table[2].append("    " + processList[i].getBurstTime() + "\n");
+			table[3].append("      " + processList[i].getPriority() + "\n");
+			table[4].append("          " + processList[i].getHistoryInfo() + "\n");
+		}
 		// }
 	}
 

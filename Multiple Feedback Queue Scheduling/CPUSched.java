@@ -69,6 +69,7 @@ public class CPUSched {
 	
 	public Process[] SJF(){
 		Process[] temp = process;
+		Process[] sample = new Process[process.length];
 		int burst[] = new int[process.length], last = 0, arrival[] = new int[process.length];
 		boolean isAvailable[] = new boolean[process.length];
 		
@@ -89,6 +90,7 @@ public class CPUSched {
 						System.out.print(temp[i].getProcessID()+" ");
 					}
 				}
+				sample[i] = temp[i];
 				last+= temp[i].getBurstTime();				
 				burst[i] = -1;		
 				
@@ -112,19 +114,21 @@ public class CPUSched {
 						burst[j] = -1;
 						flag = true;
 					}else{continue;}
+					sample[i] = temp[j];
 				}
 			}	
 		} 
 
+		// System.out.println(last + " ");
 		for(int i = 0; i < process.length; i++) {
-			// temp[i] = queue.dequeue();
-			System.out.print("" + temp[i].getProcessID());
+			// sample[i] = queue.dequeue();
+			System.out.print("" + sample[i].getProcessID());
 		}
 
-		return temp;
+		return sample;
 	}
 	
-	public Process[] STRF(){
+	public Process[] SRTF(){
 		Process[] temp = process;
 		boolean[] isAvailable = new boolean[temp.length];
 		int[] burst = new int[temp.length], tempB = new int[temp.length];
@@ -147,9 +151,9 @@ public class CPUSched {
 					tempB[j] = burst[j];					
 				}else{ continue; }
 			}
-					
 			for(int j = 0; j < temp.length; j++){
-				if(isAvailable[j] = true && getSmallestNum(tempB,0) != -1 && burst[j] == getSmallestNum(tempB,0) && flag == false){
+				// System.out.println(isAvailable[j] + " " + getSmallestNum(tempB,0) + " " + burst[j] + " " + flag);
+				if(isAvailable[j] == true && getSmallestNum(tempB,0) != -1 && burst[j] == getSmallestNum(tempB,0) && flag == false){
 					if(i == 0){
 						queue.initialProcess(temp[j]);
 						burst[j]--;
@@ -215,49 +219,153 @@ public class CPUSched {
 		return temp;
 	}
 	
-	/* public void Prio(){				//gin comment ko la anay
-		Process temp[] = process;
-		int[] burst = new int[process.length], prio = new int[process.length];
-		boolean isAvailable[] = new boolean[process.length];
-		//initializeProcess
+	public Process[] Prio(){			
+		Process[] temp = process;
+		boolean isAvailable[] = new boolean[temp.length], flag2=false;
+		int[] burst = new int[temp.length], tempB = new int[temp.length], prio = new int[temp.length];
+			
 		quicksort(temp, 0, temp.length-1, 0);
 		
+		//initializeProcess
 		for(int i = 0; i < temp.length; i++){
+			isAvailable[i] = false;
 			burst[i] = temp[i].getBurstTime();
-			prio[i] = temp[i].getPriority();
-			isAvailable[i] = false;	
+			tempB[i] = 0;
+			prio[i] = 0;
+			//done=false;
 		}
 		
+		//process
 		for(int i = 0; i < totalTime(1); i++){
-			for(int j = 0; j < temp.length; j++){
-				if(i >= temp[j].getArrivalTime() && prio[j] != -1){
+			boolean flag = false, falg2 =false;
+			int in = 0;
+			boolean done = true, first = false;
+			
+			for(int j =0; j < temp.length; j++){			
+				if(i == temp[j].getArrivalTime()){
 					isAvailable[j] = true;
-					//prio[j] = temp[j].getPriority();
-					//System.out.println(i+": add");
-				}
-				
-				if(i < temp[j].getArrivalTime()){
-					isAvailable[j] = false;
-					//prio[j] = -1;
-					//System.out.println(i+": remove");
-				}
+					tempB[j] = burst[j];
+					prio[j] = temp[j].getPriority();
+					
+				}else{ continue; }
 			}
 			
-			if(i == 0){
-				queue.initialProcess(temp[0]);
-				burst-=1;
-			}else if()
-		}
-	} */
+			///check if all isAvailable is true			
+			first = isAvailable[0];
+			for(int j = 0; j < temp.length; j++){				
+				if(first != isAvailable[j]){
 	
-	public void RoundRobin(int timeQ){
+					done = false;
+				
+				}		
+			}
+	
+			if(done == false){				
+				for(int j = 0; j < temp.length; j++){
+					if(isAvailable[j] = true && getSmallestNum(prio, 0) == prio[j] && flag == false){
+						if(i == 0){
+							queue.initialProcess(temp[j]);
+							burst[j]--;
+							flag = true;
+							System.out.print(temp[j].getProcessID()+" ");
+							if(burst[j] == 0) {prio[j] = -1;}
+						}else{
+							queue.enqueue(temp[j]);
+							burst[j]--;
+							flag=true;
+							System.out.print(temp[j].getProcessID()+" ");
+							if(burst[j] == 0) {prio[j] = -1;}
+						}
+					}else{continue;}
+				}
+			}else if(done){
+				for(int j = 0; j < temp.length; j++){
+					if(getSmallestNum(prio,0) == prio[j] && flag == false){
+						queue.enqueue(temp[j]);
+						burst[j]--;
+						flag=true;
+						System.out.print(temp[j].getProcessID()+" ");
+						if(burst[j] == 0) {prio[j] = -1;}
+					}
+				}
+			} 
+		}
+
+		return temp;
+	}
+	
+	public void RR(int timeQ){			//???
 		Process temp[] = process;
+		int burst[] = new int[process.length], arrival[] = new int[process.length];
+		Queue q = new Queue();
+		boolean flag = true; int index = 0;
+		int count = 0;
+		boolean isAvailable[] = new boolean[process.length];
 		
 		quicksort(temp, 0, temp.length-1, 0);
 		
-		//for(int i = 0; i < timeQ; i++){
-				
-		//}
+		//initialize
+		for(int i = 0; i < temp.length; i++){
+			burst[i] = temp[i].getBurstTime();
+			arrival[i] = temp[i].getArrivalTime();		
+		}
+		
+		//isAvailable[0] = true;
+		//q.enqueue(temp[0]);
+		
+		while(flag == true){			
+			//System.out.print("yeah");
+			boolean f = false;
+			
+			if(count < temp.length){
+				//System.out.print(temp[i].getArrivalTime()+" ");				
+				if(temp[count].getBurstTime() >= timeQ && burst[count] != 0 && f == false){
+					//System.out.println("\nindex:"+index);
+					//System.out.print("1: "+temp[count].getArrivalTime()+" ");
+					for(int j = 0; j < timeQ; j++){
+						if(index == 0){
+							queue.initialProcess(temp[count]);						
+							System.out.print(temp[count].getArrivalTime()+" ");
+							burst[count]--;
+							f = true;
+							index++;
+							//if(dequeue().getBurstTime )
+						}else{
+							queue.enqueue(temp[count]);
+							System.out.print(temp[count].getArrivalTime()+" ");
+							f = true;
+							burst[count]--;
+							index++;
+						}
+					}
+				}else if(temp[count].getBurstTime() < timeQ && burst[count] != 0 && f == false){
+					//System.out.print(temp[i].getArrivalTime()+":2 ");
+					//System.out.print("2: "+temp[count].getArrivalTime()+" ");
+					for(int j = 0; j < temp[count].getBurstTime(); j++){
+						if(index == 0){
+							queue.initialProcess(temp[count]);						
+							System.out.print(temp[count].getArrivalTime()+" ");
+							burst[count]--;
+							f = true;
+							index++;
+						}else{
+							queue.enqueue(temp[count]);
+							System.out.print(temp[count].getArrivalTime()+" ");
+							f = true;
+							burst[count]--;
+							index++;
+						}
+					}
+				}
+			}
+			//pag end			
+			count++;			
+			
+			if(index == totalTime(1)){
+				flag=false;
+				System.out.print("index: "+index);
+			}			
+		}
 	}
 	
 	//other methods
@@ -399,12 +507,14 @@ public class CPUSched {
 		sched.FCFS();
 		System.out.println("\nSJF");
 		sched.SJF();
-		System.out.println("\nSTRF, arrival time printed");
-		sched.STRF();
+		System.out.println("\nSRTF, arrival time printed");
+		sched.SRTF();
 		System.out.println("\nNPrio");
 		sched.NPrio();
-		// System.out.println("\nPrio");
-		// sched.Prio();
+		System.out.println("\nPrio");
+		sched.Prio();
+		// System.out.println("\nRound Robin");
+		// sched.RR(2);
 		
 		int num[] = {1, 0, 0, 0, 0, 0,0};
 		

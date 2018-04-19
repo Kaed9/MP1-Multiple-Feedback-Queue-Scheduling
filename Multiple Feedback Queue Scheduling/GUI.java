@@ -140,13 +140,43 @@ public class GUI extends JFrame implements ActionListener {
 			imp.setEnabled(false);
 		} else if(event.getSource() == imp) {
 			// queuesPanel.addToQueue();
-			// String[] inputs1 = JOptionPaneExample.displayGUI1();
+			String[] inputs1 = JOptionPaneExample.displayGUI1();
+			queuesPanel.queuesHolder(inputs1[0]);
 			// System.out.println(inputs1[0]);
 			// System.out.println(inputs1[1]);
 			// System.out.println(inputs1[2]);
 			sched = new CPUSched(processControlBlock.getProcessList());
-			System.out.println("SRTF");
-			Process[] temp = sched.NPrio();
+			// System.out.println("SJF");
+			String algorithm = "";
+			for(String temp : inputs1[2].split("\n")) {
+				algorithm = temp;
+			}
+			// System.out.println(algorithm);
+			Process[] temp = null;
+			switch(algorithm) {
+				case "First Come First Serve":
+					temp = sched.FCFS();
+					// System.out.println("FCFS");
+					break;
+				case "Shortest Job First":
+					temp = sched.SJF();
+					break;
+				case "Shortest Remaining Time First":
+					temp = sched.SRTF();
+					break;
+				case "Preemptive Priority Scheduling":
+					temp = sched.Prio();
+					break;
+				case "Non-preemptive Priority Scheduling":
+					temp = sched.NPrio();
+					break;
+				case "Round Robin":
+					sched.RR(3); // sample quantum time
+					break;
+				default:
+					// System.out.println("here");
+					break;
+			}
 			queuesPanel.addToQueue(temp);
 		} else if(event.getSource() == exit) {
 			System.exit(0);
