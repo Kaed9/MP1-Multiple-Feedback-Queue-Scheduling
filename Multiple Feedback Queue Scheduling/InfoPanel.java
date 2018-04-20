@@ -7,7 +7,7 @@ public class InfoPanel extends JPanel {
 	
 	private JLabel label, algo, out, pol, e1, e2;
 	private JPanel panel, left, right, one, two;
-	private JScrollPane scrollPane, fieldPane;
+	private JScrollPane scrollPane/*, fieldPane*/;
 	private JTextArea textArea;
 	private JTextField field1, field2;
 
@@ -31,26 +31,28 @@ public class InfoPanel extends JPanel {
 		
 		add(label);
 
-		panel = new JPanel(new GridLayout(1, 2));
+		panel = new JPanel(null);
 		panel.setBounds(20, 70, 700, 140);
 		panel.setBackground(Color.WHITE);
 
 		algo = new JLabel("Classical Scheduling Algorithm", JLabel.CENTER);
 		textArea = new JTextArea();
+		textArea.setEditable(false);
 		scrollPane = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		left = new JPanel(new BorderLayout());
 		left.add(algo, BorderLayout.NORTH);
 		left.add(scrollPane, BorderLayout.CENTER);
+		left.setBounds(0, 0, 300, 140);
 
 		out = new JLabel("Output", JLabel.CENTER);
 		field1 = new JTextField();
 		field1.setHorizontalAlignment(JTextField.CENTER);
 		field1.setEditable(false);
-		fieldPane = new JScrollPane(field1, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		// fieldPane = new JScrollPane(field1, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		e1 = new JLabel(" ", JLabel.CENTER);
 		one = new JPanel(new BorderLayout());
 		one.add(out, BorderLayout.NORTH);
-		one.add(fieldPane, BorderLayout.CENTER);
+		one.add(field1, BorderLayout.CENTER);
 		one.add(e1, BorderLayout.SOUTH);
 
 		pol = new JLabel("Priority Policy", JLabel.CENTER);
@@ -64,6 +66,7 @@ public class InfoPanel extends JPanel {
 		two.add(e2, BorderLayout.SOUTH);
 
 		right = new JPanel(new GridLayout(2, 1));
+		right.setBounds(320, 0, 380, 140);
 		right.add(one);
 		right.add(two);
 

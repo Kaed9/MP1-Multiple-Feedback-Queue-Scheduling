@@ -22,7 +22,7 @@ public class QueuesPanel extends JPanel {
 	// private JPanel[] panelArr = new JPanel[100];
 	// private JLabel[] labelArr = new JLabel[100];
 	private JPanel[][] panelArr;
-	private JLabel[][] labelArr;
+	private JLabel[][] labelArr, time;
 	
 	private JLabel[] queueLabel;
 	private JPanel[] quPane;
@@ -41,7 +41,7 @@ public class QueuesPanel extends JPanel {
 		setBackground(Color.WHITE);
 		// setBackground(Color.lightGray);
 		
-		label = new JLabel("QUEUES", JLabel.CENTER);
+		label = new JLabel("GANTT CHART", JLabel.CENTER);
 		label.setFont(font);
 		label.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.lightGray));
 		label.setSize(700, 70);
@@ -99,7 +99,8 @@ public class QueuesPanel extends JPanel {
 		quHolder = new JPanel(new GridLayout(value, 1));
 
 		for(int i = 0; i < value; i++) {
-			quPane[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			// quPane[i] = new JPanel(new FlowLayout(FlowLayout.LEFT));
+			quPane[i] = new JPanel(null);
 
 			quHolder.add(quPane[i]);
 		}
@@ -109,7 +110,7 @@ public class QueuesPanel extends JPanel {
 
 		panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder());
-		panel.setBounds(100, 120, 620, 70);
+		panel.setBounds(100, 120, 620, 150);
 
 		panel.add(scrollPane, BorderLayout.CENTER);
 		add(panel);
@@ -155,34 +156,58 @@ public class QueuesPanel extends JPanel {
 		for(int i = 0; i < temp.length; i++) {
 			maxBurstTime += temp[i].getBurstTime();
 		}
+		int x1 = maxBurstTime * 40;
+		quHolder.setPreferredSize(new Dimension(x1, 80));
 
 		// bar.addAdjustmentListener(listener);
 		panelArr = new JPanel[temp.length][];
 		labelArr = new JLabel[temp.length][];
+		time = new JLabel[temp.length][];
 
 		new Thread() {
 			public void run() {
 				Color color = null;
+				int x = 0;
+				int maxi = 1;
 				try {
 					for(int i = 0; i < temp.length; i++) {
 						panelArr[i] = new JPanel[temp[i].getBurstTime()];
 						labelArr[i] = new JLabel[temp[i].getBurstTime()];
+						time[i] = new JLabel[temp[i].getBurstTime()];
 						color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
 						for(int j = 0; j < temp[i].getBurstTime(); j++) {
 							repaint();
 							revalidate();
-							labelArr[i][j] = new JLabel("P" + temp[i].getProcessID());
+							if(j == 0) {
+								labelArr[i][j] = new JLabel("P" + temp[i].getProcessID(), JLabel.CENTER);
+								time[i][j] = new JLabel(" ", JLabel.LEFT);
+								if(i == 0)
+									time[i][j] = new JLabel("0", JLabel.LEFT);
+							} else if(j == temp[i].getBurstTime() - 1) {
+								time[i][j] = new JLabel("" + maxi, JLabel.RIGHT);
+								labelArr[i][j] = new JLabel(" ", JLabel.CENTER);
+							} else {
+								labelArr[i][j] = new JLabel(" ", JLabel.CENTER);
+								time[i][j] = new JLabel(" ", JLabel.CENTER);
+							}
+
 							labelArr[i][j].setOpaque(true);
 							labelArr[i][j].setBackground(color);
 							labelArr[i][j].setFont(font2);
 							labelArr[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+							labelArr[i][j].setBounds(0, 0, 40, 38);
+							time[i][j].setBounds(0, 40, 40, 38);
 
-							panelArr[i][j] = new JPanel();
+							panelArr[i][j] = new JPanel(null);
 							panelArr[i][j].add(labelArr[i][j]);
+							panelArr[i][j].add(time[i][j]);
+							panelArr[i][j].setBounds(x, 0, 40, 76);
+							x += 40;
 
 							quPane[index].add(panelArr[i][j]);
 
 							Thread.sleep(100);
+							maxi++;
 						}
 
 					}
@@ -199,7 +224,7 @@ public class QueuesPanel extends JPanel {
 		repaint();
 		revalidate();
 
-		label = new JLabel("QUEUES", JLabel.CENTER);
+		label = new JLabel("GANTT CHART", JLabel.CENTER);
 		label.setFont(font);
 		label.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.lightGray));
 		label.setSize(700, 70);

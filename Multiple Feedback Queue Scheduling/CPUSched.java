@@ -302,13 +302,16 @@ public class CPUSched {
 	}
 	
 	public void RR(int timeQ){			//???
+		//important variables
 		Process temp[] = process;
-		int burst[] = new int[process.length], arrival[] = new int[process.length];
 		Queue q = new Queue();
-		boolean flag = true; int index = 0;
-		int count = 0;
-		boolean isAvailable[] = new boolean[process.length];
 		
+		
+		int burst[] = new int[process.length], arrival[] = new int[process.length];		
+		boolean flag = true, isAvailable[] = new boolean[process.length];
+		int count = 0, index = 0;
+		
+		//sort by arrival time
 		quicksort(temp, 0, temp.length-1, 0);
 		
 		//initialize
@@ -316,59 +319,69 @@ public class CPUSched {
 			burst[i] = temp[i].getBurstTime();
 			arrival[i] = temp[i].getArrivalTime();		
 		}
-		
-		//isAvailable[0] = true;
-		//q.enqueue(temp[0]);
-		
+				
 		while(flag == true){			
-			//System.out.print("yeah");
-			boolean f = false;
-			
-			if(count < temp.length){
-				//System.out.print(temp[i].getArrivalTime()+" ");				
-				if(temp[count].getBurstTime() >= timeQ && burst[count] != 0 && f == false){
-					//System.out.println("\nindex:"+index);
-					//System.out.print("1: "+temp[count].getArrivalTime()+" ");
-					for(int j = 0; j < timeQ; j++){
-						if(index == 0){
-							queue.initialProcess(temp[count]);						
-							System.out.print(temp[count].getArrivalTime()+" ");
-							burst[count]--;
-							f = true;
-							index++;
-							//if(dequeue().getBurstTime )
-						}else{
-							queue.enqueue(temp[count]);
-							System.out.print(temp[count].getArrivalTime()+" ");
-							f = true;
-							burst[count]--;
-							index++;
-						}
-					}
-				}else if(temp[count].getBurstTime() < timeQ && burst[count] != 0 && f == false){
-					//System.out.print(temp[i].getArrivalTime()+":2 ");
-					//System.out.print("2: "+temp[count].getArrivalTime()+" ");
-					for(int j = 0; j < temp[count].getBurstTime(); j++){
-						if(index == 0){
-							queue.initialProcess(temp[count]);						
-							System.out.print(temp[count].getArrivalTime()+" ");
-							burst[count]--;
-							f = true;
-							index++;
-						}else{
-							queue.enqueue(temp[count]);
-							System.out.print(temp[count].getArrivalTime()+" ");
-							f = true;
-							burst[count]--;
-							index++;
-						}
+			//initial 	process
+			int top=0; //index han top queue
+			boolean done = false;
+			//initialize top
+			if(index == 0){
+				for(int i = 0; i < temp.length; i++){
+					if(temp[i].getArrivalTime() == getSmallestNum(arrival, 0)){
+						top = i;
+						//System.out.println("top: "+top);
 					}
 				}
+				q.initialProcess(temp[top]);
 			}
-			//pag end			
-			count++;			
 			
-			if(index == totalTime(1)){
+			//process			
+			boolean cont = (burst[top] >= timeQ), flag2 = false;
+			int bb = burst[top];
+			//System.out.println(!cont);
+			if((burst[top] >= timeQ)/*  && flag2 == false */){
+				System.out.println("yeah");
+				for(int i = 0; i<timeQ; i++){
+					if(index == 0){
+						queue.initialProcess(temp[top]);
+					}else{
+						queue.enqueue(temp[top]);
+					}
+					System.out.print(temp[top].getArrivalTime()+" ");
+					burst[top]--;
+					index++;
+					//flag2 = true;
+				}
+			}else if((burst[top] < timeQ)/*  && flag2 == false */){				
+				for(int i = 0; i < bb; i++){
+					System.out.println("no");				
+					if(index == 0){
+						queue.initialProcess(temp[top]);
+					}else{
+						queue.enqueue(temp[top]);
+					}
+					System.out.print(temp[top].getArrivalTime()+" ");
+					burst[top]--;
+					index++;	
+					//flag2 = true;
+				}
+				// System.out.print("|" + burst[top] + " " + timeQ);
+			}			
+			
+			//System.out.print(index+" ");
+			//Take note of 'q'			 
+			Process pro[] = q.getProcess();
+			for(int i = 0; i < temp.length && i!=top; i++){
+				if(index >= temp[i].getArrivalTime()){
+					q.enqueue(temp[i]);					
+				}
+			}			
+			//add top process if burst!=0
+			if(burst[top] != 0){
+				q.enqueue(temp[top]);
+			}
+			//index++;
+			if(index == totalTime(1)-1){
 				flag=false;
 				System.out.print("index: "+index);
 			}			
@@ -510,18 +523,18 @@ public class CPUSched {
 		//  p6		   3  		  1				10
 		
 		
-		System.out.println("FCFS");
-		sched.FCFS();
-		System.out.println("\nSJF");
-		sched.SJF();
-		System.out.println("\nSRTF, arrival time printed");
-		sched.SRTF();
-		System.out.println("\nNPrio");
-		sched.NPrio();
-		System.out.println("\nPrio");
-		sched.Prio();
-		// System.out.println("\nRound Robin");
-		// sched.RR(2);
+		// System.out.println("FCFS");
+		// sched.FCFS();
+		// System.out.println("\nSJF");
+		// sched.SJF();
+		// System.out.println("\nSRTF, arrival time printed");
+		// sched.SRTF();
+		// System.out.println("\nNPrio");
+		// sched.NPrio();
+		// System.out.println("\nPrio");
+		// sched.Prio();
+		System.out.println("\nRound Robin");
+		sched.RR(2);
 		
 		int num[] = {1, 0, 0, 0, 0, 0,0};
 		
