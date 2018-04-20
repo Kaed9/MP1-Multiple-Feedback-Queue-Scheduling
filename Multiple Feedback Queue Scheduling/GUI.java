@@ -53,7 +53,7 @@ public class GUI extends JFrame implements ActionListener {
 		generateProcess = new JMenuItem("Generate Processes");
 		generateProcess.setMnemonic(KeyEvent.VK_G);
 
-		clear = new JMenuItem("Clear Process Control Block");
+		clear = new JMenuItem("Clear All");
 		clear.setMnemonic(KeyEvent.VK_C);
 
 		imp = new JMenuItem("Implement MLFQ");
@@ -64,9 +64,9 @@ public class GUI extends JFrame implements ActionListener {
 		exit.setMnemonic(KeyEvent.VK_X);
 		
 		file.add(generateProcess);
-		file.add(clear);
-		file.addSeparator();
 		file.add(imp);
+		file.addSeparator();
+		file.add(clear);
 		file.addSeparator();
 		file.add(exit);
 		
@@ -137,11 +137,14 @@ public class GUI extends JFrame implements ActionListener {
 			} else { }
 		} else if(event.getSource() == clear) {
 			processControlBlock.clearTables();
+			queuesPanel.clearQueuesPanel();
+			infoPanel.clearInfoPanel();
 			imp.setEnabled(false);
 		} else if(event.getSource() == imp) {
 			// queuesPanel.addToQueue();
 			String[] inputs1 = JOptionPaneExample.displayGUI1();
 			queuesPanel.queuesHolder(inputs1[0]);
+			infoPanel.additionalInfo(inputs1[2], inputs1[1]);
 			// System.out.println(inputs1[0]);
 			// System.out.println(inputs1[1]);
 			// System.out.println(inputs1[2]);
@@ -155,11 +158,10 @@ public class GUI extends JFrame implements ActionListener {
 			Process[] temp = null;
 			switch(algorithm) {
 				case "First Come First Serve":
-					temp = sched.FCFS();
-					// System.out.println("FCFS");
+					temp = sched.FCFS(); // works
 					break;
 				case "Shortest Job First":
-					temp = sched.SJF();
+					temp = sched.SJF(); // works
 					break;
 				case "Shortest Remaining Time First":
 					temp = sched.SRTF();
@@ -168,16 +170,21 @@ public class GUI extends JFrame implements ActionListener {
 					temp = sched.Prio();
 					break;
 				case "Non-preemptive Priority Scheduling":
-					temp = sched.NPrio();
+					temp = sched.NPrio(); // works
 					break;
 				case "Round Robin":
 					sched.RR(3); // sample quantum time
 					break;
 				default:
-					// System.out.println("here");
 					break;
 			}
+			String[] string = new String[temp.length];
+			for(int i = 0; i < temp.length; i++) {
+				string[i] = String.valueOf(temp[i].getProcessID());
+			}
+
 			queuesPanel.addToQueue(temp);
+			infoPanel.addToField(string, temp.length);
 		} else if(event.getSource() == exit) {
 			System.exit(0);
 		}

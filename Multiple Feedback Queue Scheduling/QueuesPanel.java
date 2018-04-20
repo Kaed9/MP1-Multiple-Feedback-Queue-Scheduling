@@ -192,4 +192,19 @@ public class QueuesPanel extends JPanel {
 
 		// bar.removeAdjustmentListener(listener);
 	}
+
+	public void clearQueuesPanel() {
+
+		removeAll();
+		repaint();
+		revalidate();
+
+		label = new JLabel("QUEUES", JLabel.CENTER);
+		label.setFont(font);
+		label.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.lightGray));
+		label.setSize(700, 70);
+		label.setLocation(20, 20);
+		
+		add(label);
+	}
 }

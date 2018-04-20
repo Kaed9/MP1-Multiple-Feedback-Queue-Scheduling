@@ -176,6 +176,7 @@ public class CPUSched {
 	
 	public Process[] NPrio(){
 		Process[] temp = process;	
+		Process[] sample = new Process[process.length];
 		int last = 0, prio[] = new int[process.length];
 		
 		quicksort(temp, 0, temp.length-1, 0);
@@ -189,15 +190,16 @@ public class CPUSched {
 				for(int j = 0; j < temp[i].getBurstTime(); j++){
 					if(j ==0){
 						queue.initialProcess(temp[i]); 
-						System.out.print(temp[i].getArrivalTime()+" ");
+						System.out.print(temp[i].getProcessID()+" ");
 					}else{
 						queue.enqueue(temp[i]); 
-						System.out.print(temp[i].getArrivalTime()+" ");
+						System.out.print(temp[i].getProcessID()+" ");
 					}					
 				}
 				last+=temp[i].getBurstTime();
 				//System.out.println("test: "+last);
 				prio[i] = -1;
+				sample[i] = temp[i];
 			}else{
 				boolean flag = false;
 				for(int j = 0; j < temp.length; j++){
@@ -205,18 +207,23 @@ public class CPUSched {
 					if(temp[j].getPriority() == getSmallestNum(prio, 1) && prio[j] != -1 && flag == false){						
 						for(int k = 0; k < temp[j].getBurstTime(); k++){
 							queue.enqueue(temp[j]); 
-							System.out.print(temp[j].getArrivalTime()+" ");							
+							System.out.print(temp[j].getProcessID()+" ");
 						}
-						prio[j] = -1;							
+						prio[j] = -1;
 						//System.out.println("test: "+last);
 						last+=temp[j].getBurstTime();
 						flag = true;
+						sample[i] = temp[j];
 					}
 				}
 			}
 		}
 
-		return temp;
+		for(int i = 0; i < process.length; i++ ){
+			System.out.print(sample[i].getProcessID());
+		}
+
+		return sample;
 	}
 	
 	public Process[] Prio(){			

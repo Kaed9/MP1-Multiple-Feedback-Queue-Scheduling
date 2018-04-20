@@ -258,10 +258,10 @@ public class JOptionPaneExample {
 
         choose_policy = new JLabel("Choose priority policy: ");
         higher_lower = new JRadioButton("Higher before lower");
-        higher_lower.setActionCommand("higher_lower");
+        higher_lower.setActionCommand("Higher before lower");
         higher_lower.setEnabled(false);
         fixed = new JRadioButton("Fixed time slots");
-        fixed.setActionCommand("fixed");
+        fixed.setActionCommand("Fixed time slots");
         fixed.setEnabled(false);
 
         group1 = new ButtonGroup();
