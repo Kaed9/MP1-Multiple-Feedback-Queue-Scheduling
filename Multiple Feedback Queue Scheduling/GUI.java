@@ -6,8 +6,8 @@ import javax.swing.border.*;
 public class GUI extends JFrame implements ActionListener {
 	
 	private JMenuBar menu_bar;
-	private JMenu file, help;
-	private JMenuItem exit, help1, about, generateProcess, clear, imp;
+	private JMenu file, tests, help;
+	private JMenuItem exit, help1, about, generateProcess, clear, imp, use;
 	// private JPanel pcb, queues, infos;
 	
 	private QueuesPanel queuesPanel = null;
@@ -38,6 +38,7 @@ public class GUI extends JFrame implements ActionListener {
 		generateProcess.addActionListener(this);
 		clear.addActionListener(this);
 		imp.addActionListener(this);
+		use.addActionListener(this);
 		exit.addActionListener(this);
 	}
 	
@@ -70,6 +71,15 @@ public class GUI extends JFrame implements ActionListener {
 		file.addSeparator();
 		file.add(exit);
 		
+		tests = new JMenu("Tests");
+		tests.setMnemonic(KeyEvent.VK_T);
+		menu_bar.add(tests);
+
+		use = new JMenuItem("Use Test Cases");
+		use.setMnemonic(KeyEvent.VK_U);
+
+		tests.add(use);
+
 		help = new JMenu("Help");
 		help.setMnemonic(KeyEvent.VK_H);
 		menu_bar.add(help);
@@ -157,6 +167,44 @@ public class GUI extends JFrame implements ActionListener {
 			// System.out.println(algorithm);
 			Process[] temp = null;
 			switch(algorithm) {
+				case "First Come First Serve":
+					temp = sched.FCFS(); // works
+					break;
+				case "Shortest Job First":
+					temp = sched.SJF(); // works
+					break;
+				case "Shortest Remaining Time First":
+					temp = sched.SRTF();
+					break;
+				case "Preemptive Priority Scheduling":
+					temp = sched.Prio();
+					break;
+				case "Non-preemptive Priority Scheduling":
+					temp = sched.NPrio(); // works
+					break;
+				case "Round Robin":
+					sched.RR(3); // sample quantum time
+					break;
+				default:
+					break;
+			}
+			String[] string = new String[temp.length];
+			for(int i = 0; i < temp.length; i++) {
+				string[i] = String.valueOf(temp[i].getProcessID());
+			}
+
+			queuesPanel.addToQueue(temp);
+			infoPanel.addToField(string, temp.length);
+		} else if(event.getSource() == use) {
+			String[] inputs2 = JOptionPaneExample.chooseTests();
+			System.out.println(inputs2[1]);
+			queuesPanel.queuesHolder("1");
+			infoPanel.additionalInfo(inputs2[0], "none");
+			processControlBlock.generateTests(inputs2);
+
+			sched = new CPUSched(processControlBlock.getProcessList());
+			Process[] temp = null;
+			switch(inputs2[0]) {
 				case "First Come First Serve":
 					temp = sched.FCFS(); // works
 					break;

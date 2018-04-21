@@ -28,6 +28,54 @@ public class ProcessControlBlock extends JPanel {
 	private Font font1 = new Font("Verdana", Font.BOLD, 15);
 	private Font font2 = new Font("Verdana", Font.PLAIN, 15);
 
+	private int[] fcfs_test1_arrival = {20, 15, 23, 34, 28, 26, 39, 33, 49, 47};
+	private int[] fcfs_test1_burst = {48, 11, 10, 26, 42, 37, 33, 29, 25, 1};
+	private int[] fcfs_test2_arrival = {2, 25, 28, 6, 31, 11, 11, 12, 31, 5, 49, 37, 47, 23, 24};
+	private int[] fcfs_test2_burst = {38, 32, 6, 34, 42, 24, 45, 30, 9, 5, 21, 41, 37, 31, 38};
+	private int[] fcfs_test3_arrival = {21, 37, 26, 25, 39, 27, 16, 33, 6, 43, 23, 42, 23, 48, 33, 9, 29, 12, 45, 23};
+	private int[] fcfs_test3_burst = {32, 39, 12, 17, 32, 37, 48, 11, 32, 27, 30, 2, 23, 7, 33, 27, 32, 28, 42, 31};
+
+	private int[] sjf_test1_arrival = {27, 45, 2, 47, 4, 46, 8, 3, 21, 45};
+	private int[] sjf_test1_burst = {22, 22, 48, 33, 14, 41, 19, 26, 47, 36};
+	private int[] sjf_test2_arrival = {0, 16, 42, 13, 12, 23, 28, 8, 34, 9, 0 , 4, 1, 33, 29};
+	private int[] sjf_test2_burst = {27, 3, 4, 18, 41, 37, 33, 15, 32, 38, 36, 5, 8, 13, 14};
+	private int[] sjf_test3_arrival = {39, 11, 45, 9, 35, 21, 32, 1, 38, 5, 23, 33, 29, 2, 7, 5, 47, 22, 7, 5};
+	private int[] sjf_test3_burst = {39, 36, 25, 4, 14, 23, 28, 19, 28, 34, 36, 3, 18, 23, 44, 33, 39, 50, 10, 33};
+
+	private int[] srtf_test1_arrival = {38, 6, 1, 33, 23, 45, 7, 2, 49, 14};
+	private int[] srtf_test1_burst = {20, 8, 20, 15, 23, 29, 5, 6, 28, 25};
+	private int[] srtf_test2_arrival = {6, 16, 25, 23, 24, 6, 26, 28, 3, 9, 7, 9, 1, 44, 15};
+	private int[] srtf_test2_burst = {50, 36, 14, 2, 45, 37, 5, 25, 45, 12, 48, 45, 30, 13, 23};
+	private int[] srtf_test3_arrival = {43, 0, 23, 28, 10, 37, 16, 33, 48, 29, 28, 1, 46, 42, 38, 14, 33, 10, 36, 11};
+	private int[] srtf_test3_burst = {42, 39, 33, 30, 7, 4, 27, 15, 42, 25, 23, 27, 34, 26, 4, 15, 48, 17, 20, 40};
+
+	private int[] prio_test1_arrival = {42, 49, 43, 29, 13, 3, 26, 21, 6, 48};
+	private int[] prio_test1_burst = {33, 44, 33, 25, 42, 31, 42, 6, 11, 18};
+	private int[] prio_test1_priority = {17, 27, 19, 37, 16, 27, 31, 12, 11, 27};
+	private int[] prio_test2_arrival = {35, 20, 36, 43, 22, 37, 32, 21, 46, 36, 47, 47, 33, 2, 47};
+	private int[] prio_test2_burst = {29, 8, 12, 47, 5, 5, 1, 7, 40, 3, 30, 26, 20, 27, 3};
+	private int[] prio_test2_priority = {22, 40, 29, 7, 8, 33, 37, 1, 10, 1, 6, 23, 37, 35, 6};
+	private int[] prio_test3_arrival = {40, 34, 12, 29, 11, 33, 17, 40, 30, 13, 28, 11, 31, 37, 3, 46, 46, 17, 12, 2};
+	private int[] prio_test3_burst = {33, 15, 6, 29, 3, 9, 35, 24, 39, 49, 14, 29, 15, 34, 14, 48, 27, 23, 43, 21};
+	private int[] prio_test3_priority = {31, 4, 6, 23, 11, 31, 33, 36, 16, 8, 4, 25, 27, 25, 15, 37, 29, 9, 23, 23};
+
+	private int[] nprio_test1_arrival = {6, 18, 7, 33, 24, 13, 19, 15, 46, 3};
+	private int[] nprio_test1_burst = {18, 32, 48, 49, 1, 16, 7, 6, 5, 22};
+	private int[] nprio_test1_priority = {26, 29, 33, 27, 40, 11, 30, 33, 30, 23};
+	private int[] nprio_test2_arrival = {1, 12, 17, 34, 44, 30, 32, 40, 34, 41, 9, 35, 38, 45, 16};
+	private int[] nprio_test2_burst = {6, 10, 24, 36, 50, 38, 43, 34, 21, 8, 27, 14, 21, 17, 31};
+	private int[] nprio_test2_priority = {37, 16, 4, 19, 30, 5, 24, 35, 10, 14, 36, 34, 12, 18, 13};
+	private int[] nprio_test3_arrival = {36, 31, 48, 17, 21, 28, 40, 10, 16, 12, 33, 32, 39, 0, 47, 11, 33, 38, 21, 49};
+	private int[] nprio_test3_burst = {15, 21, 15, 9, 30, 43, 12, 42, 49, 47, 44, 10, 22, 37, 13, 3, 2, 50, 1, 15};
+	private int[] nprio_test3_priority = {22, 29, 36, 36, 9, 18, 13, 24, 8, 31, 4, 13, 5, 32, 29, 21, 19, 10, 26, 10};
+
+	private int[] rr_test1_arrival = {38, 47, 45, 21, 35, 23, 24, 16, 36, 8};
+	private int[] rr_test1_burst = {47, 14, 23, 42, 49, 17, 23, 11, 12, 25};
+	private int[] rr_test2_arrival = {49, 13, 13, 2, 15, 16, 34, 11, 19, 3, 26, 19, 43, 14, 45};
+	private int[] rr_test2_burst = {18, 9, 15, 27, 40, 8, 17, 2, 31, 3, 8, 11, 34, 16, 6};
+	private int[] rr_test3_arrival = {8, 43, 24, 35, 28, 39, 17, 10, 44, 0, 36, 43, 3, 42, 0, 27, 48, 9, 4, 45};
+	private int[] rr_test3_burst = {30, 6, 43, 46, 44, 17, 9, 26, 38, 41, 12, 22, 41, 41, 27, 46, 33, 26, 13, 48};
+
 	private Random random = new Random();
 
 	private Process[] processList;
@@ -190,6 +238,121 @@ public class ProcessControlBlock extends JPanel {
 			table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 		}
 		// }
+	}
+
+	public void generateTests(String[] inputs) {
+
+		if(inputs[0] == "First Come First Serve") {
+			if(inputs[1] == "Test #1") {
+				processList = new Process[10];
+				for(int i = 0; i < 10; i++) {
+					processList[i] = new Process((i + 1), fcfs_test1_arrival[i], fcfs_test1_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #2") {
+				processList = new Process[15];
+				for(int i = 0; i < 15; i++) {
+					processList[i] = new Process((i + 1), fcfs_test2_arrival[i], fcfs_test2_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #3") {
+				processList = new Process[20];
+				for(int i = 0; i < 20; i++) {
+					processList[i] = new Process((i + 1), fcfs_test3_arrival[i], fcfs_test3_burst[i], (random.nextInt(40) + 1));
+				}
+			}
+		} else if(inputs[0] == "Shortest Job First") {
+			if(inputs[1] == "Test #1") {
+				processList = new Process[10];
+				for(int i = 0; i < 10; i++) {
+					processList[i] = new Process((i + 1), sjf_test1_arrival[i], sjf_test1_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #2") {
+				processList = new Process[15];
+				for(int i = 0; i < 15; i++) {
+					processList[i] = new Process((i + 1), sjf_test2_arrival[i], sjf_test2_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #3") {
+				processList = new Process[20];
+				for(int i = 0; i < 20; i++) {
+					processList[i] = new Process((i + 1), sjf_test3_arrival[i], sjf_test3_burst[i], (random.nextInt(40) + 1));
+				}
+			}
+		} else if(inputs[0] == "Shortest Remaining Time First") {
+			if(inputs[1] == "Test #1") {
+				processList = new Process[10];
+				for(int i = 0; i < 10; i++) {
+					processList[i] = new Process((i + 1), srtf_test1_arrival[i], srtf_test1_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #2") {
+				processList = new Process[15];
+				for(int i = 0; i < 15; i++) {
+					processList[i] = new Process((i + 1), srtf_test2_arrival[i], srtf_test2_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #3") {
+				processList = new Process[20];
+				for(int i = 0; i < 20; i++) {
+					processList[i] = new Process((i + 1), srtf_test3_arrival[i], srtf_test3_burst[i], (random.nextInt(40) + 1));
+				}
+			}
+		} else if(inputs[0] == "Preemptive Priority Scheduling") {
+			if(inputs[1] == "Test #1") {
+				processList = new Process[10];
+				for(int i = 0; i < 10; i++) {
+					processList[i] = new Process((i + 1), prio_test1_arrival[i], prio_test1_burst[i], prio_test1_priority[i]);
+				}
+			} else if(inputs[1] == "Test #2") {
+				processList = new Process[15];
+				for(int i = 0; i < 15; i++) {
+					processList[i] = new Process((i + 1), prio_test2_arrival[i], prio_test2_burst[i], prio_test2_priority[i]);
+				}
+			} else if(inputs[1] == "Test #3") {
+				processList = new Process[20];
+				for(int i = 0; i < 20; i++) {
+					processList[i] = new Process((i + 1), prio_test3_arrival[i], prio_test3_burst[i], prio_test3_priority[i]);
+				}
+			}
+		} else if(inputs[0] == "Non-preemptive Priority Scheduling") {
+			if(inputs[1] == "Test #1") {
+				processList = new Process[10];
+				for(int i = 0; i < 10; i++) {
+					processList[i] = new Process((i + 1), nprio_test1_arrival[i], nprio_test1_burst[i], nprio_test1_priority[i]);
+				}
+			} else if(inputs[1] == "Test #2") {
+				processList = new Process[15];
+				for(int i = 0; i < 15; i++) {
+					processList[i] = new Process((i + 1), nprio_test2_arrival[i], nprio_test2_burst[i], nprio_test2_priority[i]);
+				}
+			} else if(inputs[1] == "Test #3") {
+				processList = new Process[20];
+				for(int i = 0; i < 20; i++) {
+					processList[i] = new Process((i + 1), nprio_test3_arrival[i], nprio_test3_burst[i], nprio_test3_priority[i]);
+				}
+			}
+		} else if(inputs[0] == "Round Robin") {
+			if(inputs[1] == "Test #1") {
+				processList = new Process[10];
+				for(int i = 0; i < 10; i++) {
+					processList[i] = new Process((i + 1), rr_test1_arrival[i], rr_test1_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #2") {
+				processList = new Process[15];
+				for(int i = 0; i < 15; i++) {
+					processList[i] = new Process((i + 1), rr_test2_arrival[i], rr_test2_burst[i], (random.nextInt(40) + 1));
+				}
+			} else if(inputs[1] == "Test #3") {
+				processList = new Process[20];
+				for(int i = 0; i < 20; i++) {
+					processList[i] = new Process((i + 1), rr_test3_arrival[i], rr_test3_burst[i], (random.nextInt(40) + 1));
+				}
+			}
+		}
+
+		for(int i = 0; i < processList.length; i++) {
+			table[0].append("   " + processList[i].getProcessID() + "\n");
+			table[1].append("      " + processList[i].getArrivalTime() + "\n");
+			table[2].append("    " + processList[i].getBurstTime() + "\n");
+			table[3].append("      " + processList[i].getPriority() + "\n");
+			table[4].append("          " + processList[i].getHistoryInfo() + "\n");
+		}
 	}
 
 	public Process[] getProcessList() {

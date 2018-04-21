@@ -29,11 +29,19 @@ public class JOptionPaneExample {
     private static JLabel[] boxName;
     private static JPanel[] boxHold;
 
+    private static JPanel panel2, top2, mid, right;
+    private static JLabel testAlgoLabel, testNumLabel;
+    private static JComboBox algoBox;
+    private static JRadioButton[] tests = new JRadioButton[3];
+    private static ButtonGroup group2;
+
     private static String[] inputs = new String[5];
     private static String[] inputs1 = new String[3];
+    private static String[] inputs2 = new String[2];
     private static String[] strings = {"PID", "Arrival Time", "CPU Burst Time", "Priority"};
     private static Object[] values = {"Submit", "Cancel"};
     private static String[] algorithms = {"First Come First Serve", "Shortest Job First", "Shortest Remaining Time First", "Preemptive Priority Scheduling", "Non-preemptive Priority Scheduling", "Round Robin"};
+    private static String[] testsNum = {"Test #1", "Test #2", "Test #3"};
     private static int maxQueue;
 
     private static Random rand = new Random();
@@ -378,6 +386,66 @@ public class JOptionPaneExample {
         });
 
         return panel1;
+    }
+
+    public static String[] chooseTests() {
+
+        int value = JOptionPane.showOptionDialog(null, getTestPanel(), "Test Cases", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, values, values[0]);
+        if(value == 0) {
+            inputs2[0] = String.valueOf(algoBox.getSelectedItem());
+        }
+
+        return inputs2;
+    }
+
+    private static JPanel getTestPanel() {
+
+        panel2 = new JPanel(new BorderLayout());
+        panel2.setPreferredSize(new Dimension(300, 100));
+
+        top2 = new JPanel(new BorderLayout());
+        mid = new JPanel(new BorderLayout());
+        right = new JPanel(new GridLayout(1, 3));
+
+        testAlgoLabel = new JLabel("Choose classical scheduling algorithm: ", JLabel.CENTER);
+        algoBox = new JComboBox(algorithms);
+        algoBox.setSelectedIndex(0);
+
+        testNumLabel = new JLabel("Choose test number: ", JLabel.CENTER);
+        group2 = new ButtonGroup();
+        for(int i = 0; i < 3; i++) {
+            tests[i] = new JRadioButton(testsNum[i]);
+            tests[i].setActionCommand(testsNum[i]);
+            // tests[i].setEnabled(false);
+            group2.add(tests[i]);
+            right.add(tests[i]);
+        }
+
+        top2.add(testAlgoLabel, BorderLayout.NORTH);
+        top2.add(algoBox, BorderLayout.SOUTH);
+        mid.add(testNumLabel, BorderLayout.NORTH);
+        mid.add(right, BorderLayout.CENTER);
+        panel2.add(top2, BorderLayout.NORTH);
+        panel2.add(mid, BorderLayout.SOUTH);
+
+        algoBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // for(int i = 0; i < 3; i++) {
+                    // tests[i].setEnabled(true);
+                inputs2[0] = String.valueOf(algoBox.getSelectedItem());
+                // }
+            }
+        });
+
+        for(int i = 0; i < 3; i++) {
+            tests[i].addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    inputs2[1] = e.getActionCommand();
+                }
+            });
+        }
+
+        return panel2;
     }
 
     public static void main(String[] args) {
