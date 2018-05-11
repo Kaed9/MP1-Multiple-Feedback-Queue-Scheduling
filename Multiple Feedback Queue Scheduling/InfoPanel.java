@@ -25,14 +25,14 @@ public class InfoPanel extends JPanel {
 		label = new JLabel("ADDITIONAL INFORMATION", JLabel.CENTER);
 		label.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.lightGray));
 		label.setFont(font);
-		label.setBounds(20, 10, 700, 50);
+		label.setBounds(20, 10, 610, 50);
 		// label.setSize(700, 50);
 		// label.setLocation(20, 10);
 		
 		add(label);
 
 		panel = new JPanel(null);
-		panel.setBounds(20, 70, 700, 140);
+		panel.setBounds(20, 70, 610, 140);
 		panel.setBackground(Color.WHITE);
 
 		algo = new JLabel("Classical Scheduling Algorithm", JLabel.CENTER);
@@ -66,7 +66,7 @@ public class InfoPanel extends JPanel {
 		two.add(e2, BorderLayout.SOUTH);
 
 		right = new JPanel(new GridLayout(2, 1));
-		right.setBounds(320, 0, 380, 140);
+		right.setBounds(320, 0, 290, 140);
 		right.add(one);
 		right.add(two);
 

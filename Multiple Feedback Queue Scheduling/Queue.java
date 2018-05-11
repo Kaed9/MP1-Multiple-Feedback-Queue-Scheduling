@@ -8,7 +8,8 @@ public class Queue {
 	
 	public void initialProcess(Process p){
 		processList = new LinkedList(p);
-		index = processList.getCurrentIndex();
+		//index = processList.getCurrentIndex();
+		index++;
 	}
 	
 	public void enqueue(Process data){
@@ -20,7 +21,9 @@ public class Queue {
 		Process n = null;
 		if(index != 0){
 			Node temp = processList.getHead();
+			// System.out.println("Test1: "+temp.getData().getArrivalTime());
 			int ind = temp.id;
+			// System.out.println("Test2: "+ind);
 			n = processList.delete(ind);
 			index--;
 			//System.out.println("Overflow");

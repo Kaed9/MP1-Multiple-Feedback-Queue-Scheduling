@@ -13,6 +13,7 @@ public class GUI extends JFrame implements ActionListener {
 	private QueuesPanel queuesPanel = null;
 	private ProcessControlBlock processControlBlock = null;
 	private InfoPanel infoPanel = null;
+	private SummaryPanel summaryPanel = null;
 	private CPUSched sched = null;
 	
 	public GUI() {
@@ -101,7 +102,7 @@ public class GUI extends JFrame implements ActionListener {
 		processControlBlock = null;
 		processControlBlock = new ProcessControlBlock();
 		processControlBlock.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
-		processControlBlock.setBounds(20, 20, 500, 680);
+		processControlBlock.setBounds(20, 20, 500, 430);
 		// processControlBlock.setSize(500, 680);
 		// processControlBlock.setLocation(20, 20);
 		
@@ -123,13 +124,19 @@ public class GUI extends JFrame implements ActionListener {
 		infoPanel = null;
 		infoPanel = new InfoPanel();
 		infoPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
-		infoPanel.setBounds(540, 470, 740, 230);
+		infoPanel.setBounds(630, 470, 650, 230);
 		// infoPanel.setSize(740, 230);
 		// infoPanel.setLocation(540, 470);
+
+		summaryPanel = null;
+		summaryPanel = new SummaryPanel();
+		summaryPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 3));
+		summaryPanel.setBounds(20, 470, 590, 230);
 		
 		add(processControlBlock);
 		add(queuesPanel);
 		add(infoPanel);
+		add(summaryPanel);
 	}
 	
 	public void actionPerformed(ActionEvent event) {
@@ -183,7 +190,7 @@ public class GUI extends JFrame implements ActionListener {
 					temp = sched.NPrio(); // works
 					break;
 				case "Round Robin":
-					sched.RR(3); // sample quantum time
+					sched.myRR(3); // sample quantum time
 					break;
 				default:
 					break;
@@ -221,7 +228,7 @@ public class GUI extends JFrame implements ActionListener {
 					temp = sched.NPrio(); // works
 					break;
 				case "Round Robin":
-					sched.RR(3); // sample quantum time
+					sched.myRR(3); // sample quantum time
 					break;
 				default:
 					break;

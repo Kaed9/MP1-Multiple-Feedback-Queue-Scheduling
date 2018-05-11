@@ -88,14 +88,14 @@ public class ProcessControlBlock extends JPanel {
 		label = new JLabel("PROCESS CONTROL BLOCK", JLabel.CENTER);
 		label.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.lightGray));
 		label.setFont(font);
-		label.setBounds(20, 20, 460, 70);
+		label.setBounds(20, 15, 460, 50);
 		// label.setSize(460, 70);
 		// label.setLocation(20, 20);
 		
 		processPanel = new JPanel();
 		processPanel.setLayout(null);
 		// processPanel.setBackground(Color.RED);
-		processPanel.setBounds(20, 110, 460, 540);
+		processPanel.setBounds(20, 80, 460, 330);
 		// processPanel.setSize(460, 540);
 		// processPanel.setLocation(20, 110);
 		processPane();
@@ -138,10 +138,10 @@ public class ProcessControlBlock extends JPanel {
 				bar.addAdjustmentListener(listener);
 
 			}
-			DefaultCaret caret = (DefaultCaret)table[i].getCaret();
-			caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+			// DefaultCaret caret = (DefaultCaret)table[i].getCaret();
+			// caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-			scrollPane[i].setBounds(0, 70, sizes[i], 470);
+			scrollPane[i].setBounds(0, 70, sizes[i], 260);
 			// scrollPane[i].setSize(sizes[i], 470);
 			// scrollPane[i].setLocation(0, 70);
 			scrollPane[i].setBorder(BorderFactory.createEmptyBorder());
@@ -157,7 +157,7 @@ public class ProcessControlBlock extends JPanel {
 				panel[i].setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.BLACK));
 				scrollPane[i].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 			}
-			panel[i].setBounds(count, 0, sizes[i], 540);
+			panel[i].setBounds(count, 0, sizes[i], 330);
 			// panel[i].setSize(sizes[i], 540);
 			// panel[i].setLocation(count, 0);
 			processPanel.add(panel[i]);

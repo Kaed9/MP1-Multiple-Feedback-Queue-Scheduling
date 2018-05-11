@@ -36,4 +36,15 @@ public class Process {
 	public int getHistoryInfo() {
 		return historyInfo;
 	}
+
+
+	public void setArrivalTime(int arrivalTime) {
+
+		this.arrivalTime = arrivalTime;
+	}
+
+	public void setBurstTime(int burstTime) {
+
+		this.burstTime = burstTime;
+	}
 }
