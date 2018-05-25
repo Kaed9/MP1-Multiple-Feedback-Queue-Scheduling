@@ -20,7 +20,7 @@ public class CPUSched {
 	}*/
 	
 	//CPU Scheduling Algorithm
-	public Process[] FCFS(){
+	public Queue FCFS(){
 		// check();
 		Process[] temp = process;
 		//sort arrival Time
@@ -52,6 +52,7 @@ public class CPUSched {
 		
 		Queue printQueue = new Queue();
 		Queue timesQueue = new Queue();
+		Queue printable = new Queue();
 		int starter = temp[0].getArrivalTime();
 		for(int i = 0; i < temp.length; i++){
 			// if(i == 0) {
@@ -63,43 +64,47 @@ public class CPUSched {
 			// }
 			for(int j = 0; j < temp[i].getBurstTime(); j++){
 				//initializeProcess
-				if(j == 0){
+				if(i == 0 && j == 0){
 					queue.initialProcess(temp[i]);
-					printQueue.initialProcess(temp[i]);
-					timesQueue.initialProcess(temp[i]);
+					// printQueue.initialProcess(temp[i]);
+					// timesQueue.initialProcess(temp[i]);
 					// System.out.print("P" + temp[i].getProcessID()+" ");
 				}else{
 					queue.enqueue(temp[i]);
-					printQueue.enqueue(temp[i]);
-					timesQueue.enqueue(temp[i]);
+					// printQueue.enqueue(temp[i]);
+					// timesQueue.enqueue(temp[i]);
 					// System.out.print("P" + temp[i].getProcessID()+" ");
 				}				
 			}
 		}
 
-		// Process sample = null;
+		Process sample = null;
 
-		// while(queue.getIndex() > 0) {
-		// 	sample = queue.dequeue();
-		// 	if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
-		// 		printQueue.initialProcess(sample);
-		// 		timesQueue.initialProcess(sample);
-		// 	} else {
-		// 		printQueue.enqueue(sample);
-		// 		timesQueue.enqueue(sample);
-		// 	}
-		// }
+		while(queue.getIndex() > 0) {
+			sample = queue.dequeue();
+			if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
+				printQueue.initialProcess(sample);
+				timesQueue.initialProcess(sample);
+				printable.initialProcess(sample);
+			} else {
+				printQueue.enqueue(sample);
+				timesQueue.enqueue(sample);
+				printable.enqueue(sample);
+			}
+		}
 
 		System.out.println();
 		// System.out.println(printQueue.getIndex());
+		// Queue printable = printQueue;
+		// System.out.println(printable.getIndex());
 		ganttChart(printQueue, timesQueue, starter);
 		System.out.println();
 		// check();
 
-		return temp;
+		return printable;
 	}
 	
-	public Process[] SJF(){
+	public Queue SJF(){
 		Process[] temp = process;
 		Process[] sample = new Process[process.length];
 		int burst[] = new int[process.length], last = 0, arrival[] = new int[process.length];
@@ -113,6 +118,7 @@ public class CPUSched {
 		
 		Queue printQueue = new Queue();
 		Queue timesQueue = new Queue();
+		Queue printable = new Queue();
 		int starter = temp[0].getArrivalTime();
 		for(int i = 0; i < temp.length; i++){
 			if(i == 0 && getSmallestNum(arrival, 1) != -1){
@@ -181,9 +187,11 @@ public class CPUSched {
 			if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
 				printQueue.initialProcess(sampler);
 				timesQueue.initialProcess(sampler);
+				printable.initialProcess(sampler);
 			} else {
 				printQueue.enqueue(sampler);
 				timesQueue.enqueue(sampler);
+				printable.enqueue(sampler);
 			}
 		}
 
@@ -192,10 +200,10 @@ public class CPUSched {
 		ganttChart(printQueue, timesQueue, starter);
 		System.out.println();
 
-		return sample;
+		return printable;
 	}
 	
-	public Process[] SRTF(){
+	public Queue SRTF(){
 		Process[] temp = process;
 		boolean[] isAvailable = new boolean[temp.length];
 		int[] burst = new int[temp.length], tempB = new int[temp.length], arrival = new int[temp.length];
@@ -255,6 +263,7 @@ public class CPUSched {
 
 		Queue printQueue = new Queue();
 		Queue timesQueue = new Queue();
+		Queue printable = new Queue();
 		int starter = temp[0].getArrivalTime();
 		Process sample = null;
 
@@ -263,9 +272,11 @@ public class CPUSched {
 			if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
 				printQueue.initialProcess(sample);
 				timesQueue.initialProcess(sample);
+				printable.initialProcess(sample);
 			} else {
 				printQueue.enqueue(sample);
 				timesQueue.enqueue(sample);
+				printable.enqueue(sample);
 			}
 		}
 
@@ -273,10 +284,10 @@ public class CPUSched {
 		ganttChart(printQueue, timesQueue, starter);
 		System.out.println();
 
-		return temp;
+		return printable;
 	}
 	
-	public Process[] NPrio(){
+	public Queue NPrio(){
 		Process[] temp = process;	
 		Process[] sample = new Process[process.length];
 		int last = 0, prio[] = new int[process.length];
@@ -289,19 +300,20 @@ public class CPUSched {
 		
 		Queue printQueue = new Queue();
 		Queue timesQueue = new Queue();
+		Queue printable = new Queue();
 		int starter = temp[0].getArrivalTime();
 		for(int i = 0; i < temp.length; i++){
 			if(i == 0){
 				for(int j = 0; j < temp[i].getBurstTime(); j++){
 					if(j ==0){
 						queue.initialProcess(temp[i]);
-						if(i == 0) {
-							printQueue.initialProcess(temp[i]);
-							timesQueue.initialProcess(temp[i]);
-						} else {
-							printQueue.enqueue(temp[i]);
-							timesQueue.enqueue(temp[i]);
-						}
+						// if(i == 0) {
+						// 	printQueue.initialProcess(temp[i]);
+						// 	timesQueue.initialProcess(temp[i]);
+						// } else {
+						// 	printQueue.enqueue(temp[i]);
+						// 	timesQueue.enqueue(temp[i]);
+						// }
 						// System.out.print(temp[i].getProcessID()+" ");
 					}else{
 						queue.enqueue(temp[i]); 
@@ -317,13 +329,13 @@ public class CPUSched {
 				for(int j = 0; j < temp.length; j++){
 					//System.out.println("done prio:"+getSmallestNum(prio, 1));					
 					if(temp[j].getPriority() == getSmallestNum(prio, 1) && prio[j] != -1 && flag == false){						
-						if(j == 0) {
-							printQueue.initialProcess(temp[j]);
-							timesQueue.initialProcess(temp[j]);
-						} else {
-							printQueue.enqueue(temp[j]);
-							timesQueue.enqueue(temp[j]);
-						}
+						// if(j == 0) {
+						// 	printQueue.initialProcess(temp[j]);
+						// 	timesQueue.initialProcess(temp[j]);
+						// } else {
+						// 	printQueue.enqueue(temp[j]);
+						// 	timesQueue.enqueue(temp[j]);
+						// }
 						for(int k = 0; k < temp[j].getBurstTime(); k++){
 							queue.enqueue(temp[j]); 
 							// System.out.print(temp[j].getProcessID()+" ");
@@ -342,14 +354,29 @@ public class CPUSched {
 		// 	System.out.print(sample[i].getProcessID());
 		// }
 
+		Process sampler = null;
+
+		while(queue.getIndex() > 0) {
+			sampler = queue.dequeue();
+			if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
+				printQueue.initialProcess(sampler);
+				timesQueue.initialProcess(sampler);
+				printable.initialProcess(sampler);
+			} else {
+				printQueue.enqueue(sampler);
+				timesQueue.enqueue(sampler);
+				printable.enqueue(sampler);
+			}
+		}
+
 		System.out.println();
 		ganttChart(printQueue, timesQueue, starter);
 		System.out.println();
 
-		return sample;
+		return printable;
 	}
 	
-	public Process[] Prio(){			
+	public Queue Prio(){			
 		Process[] temp = process;
 		boolean isAvailable[] = new boolean[temp.length], flag2=false;
 		int[] burst = new int[temp.length], tempB = new int[temp.length], prio = new int[temp.length], arrival = new int[temp.length];
@@ -424,6 +451,7 @@ public class CPUSched {
 
 		Queue printQueue = new Queue();
 		Queue timesQueue = new Queue();
+		Queue printable = new Queue();
 		int starter = temp[0].getArrivalTime();
 		Process sample = null;
 
@@ -432,9 +460,11 @@ public class CPUSched {
 			if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
 				printQueue.initialProcess(sample);
 				timesQueue.initialProcess(sample);
+				printable.initialProcess(sample);
 			} else {
 				printQueue.enqueue(sample);
 				timesQueue.enqueue(sample);
+				printable.enqueue(sample);
 			}
 		}
 
@@ -442,360 +472,131 @@ public class CPUSched {
 		ganttChart(printQueue, timesQueue, starter);
 		System.out.println();
 
-		return temp;
-	}
-	
-	public void RR(int timeQ){			//???
-		//important variables
-		Process temp[] = process;
-		Queue q = new Queue();
-		
-		
-		int burst[] = new int[process.length], arrival[] = new int[process.length];		
-		boolean flag = true, isAvailable[] = new boolean[process.length];
-		int count = 0, index = 0;
-		
-		//sort by arrival time
-		quicksort(temp, 0, temp.length-1, 0);
-		
-		//initialize
-		for(int i = 0; i < temp.length; i++){
-			burst[i] = temp[i].getBurstTime();
-			arrival[i] = -1;		
-			isAvailable[i] = false;
-		}
-		
-		while(flag == true){		
-			//System.out.println("start");
-			//initial 	process
-			int top=0; //index han top queue
-			boolean done = false;
-			boolean flag2 = false;
-			//initialize top
-			if(index == 0){
-				for(int i = 0; i < temp.length; i++){
-					if(temp[i].getArrivalTime() == getSmallestNum(arrival, 0)){
-						top = i;
-						//System.out.println("top: "+top);
-					}
-				}
-				arrival[top] = temp[top].getArrivalTime();	
-				isAvailable[top] = true;
-				q.initialProcess(temp[top]);
-				//System.out.println("top:"+top);
-			}
-			
-			//process			
-			boolean cont = (burst[top] >= timeQ);
-			int bb = burst[top];
-			//System.out.println(!cont);
-			if((bb >= timeQ && bb!=0)  && flag2 == false && isAvailable[top] == true){
-				//System.out.println("i:"+index);
-				for(int i = 0; i < timeQ; i++){
-					if(index == 0){
-						queue.initialProcess(temp[top]);
-					}else{
-						queue.enqueue(temp[top]);
-					}
-					index++;
-					burst[top]--;
-					System.out.print(temp[top].getArrivalTime()+" ");
-				}
-				flag2 = true;				
-				bb=burst[top];
-				/* 
-				for(int i = 0; i<timeQ; i++){
-					if(index	 == 0){
-						queue.initialProcess(temp[top]);
-					}else{
-						queue.enqueue(temp[top]);
-					}
-					System.out.print(temp[top].getArrivalTime()+" ");					
-					//System.out.println(burst[top]);
-					index++;
-					burst[top]--;					
-				}
-				flag2 = true;
-				burst[top]-=timeQ;
-				
-				System.out.println("burst:"+bb); */
-			}else if(bb < timeQ && bb !=0  && flag2 == false && isAvailable[top] == true){				
-				//System.out.println("i:"+index);
-				for(int i = 0; i < bb; i++){
-					if(index == 0){
-						queue.initialProcess(temp[top]);
-					}else{
-						queue.enqueue(temp[top]);
-					}
-					index++;
-					burst[top]--;
-					System.out.print(temp[top].getArrivalTime()+" ");					
-				}
-				//burst[top]-=bb;
-				bb = burst[top];
-				flag2 = true;
-				/* for(int i = 0; i < bb; i++){									
-					if(index == 0){
-						queue.initialProcess(temp[top]);
-					}else{
-						queue.enqueue(temp[top]);
-						System.out.println("no");
-					}
-					System.out.print(temp[top].getArrivalTime()+" ");					
-					//System.out.println(burst[top]);
-					index++;	
-					burst[top]--;
-					
-				}
-				flag2 = true;
-				bb = burst[top]; */
-				//burst[top]-=bb;
-			}						
-			//System.out.print(index+" ");
-			//Take note of 'q'			 			
-			
-			for(int i = 0; i < temp.length; i++){
-				if(index >= temp[i].getArrivalTime()&& i!=top){
-					q.enqueue(temp[i]);					
-					isAvailable[i]=true;	
-					arrival[i] = temp[i].getArrivalTime();	
-					//System.out.println("MO");
-				}
-			}
-			
-			/* for(int i = 0; i< temp.length;i++){
-				System.out.println(i+".arr: "+isAvailable[i]);
-			} */
-			//add top process if burst!=0
-			if(burst[top] != 0){
-				q.enqueue(temp[top]);
-			}
-			
-			for(int i = 0; i < temp.length; i++){
-				if(burst[i] == 0){
-					burst[i] = -1;
-				}
-				//System.out.println(i+".burst: "+burst[i]);
-			} 				
-			
-			Process pro;
-			//set top
-			//System.out.println("Non:"+q.getIndex());
-			for(int i = 0; i < temp.length; i++){
-				if(isAvailable[i] == true && q.getIndex() != 0){
-					pro = q.dequeue();
-					System.out.println(i+":"+pro.getArrivalTime());
-					if(pro.getArrivalTime() == temp[i].getArrivalTime()){
-						top = i;						
-					}						
-				}
-			}
-			
-			//index++;
-			if(index == totalTime(1)-1){
-				flag=false;
-				System.out.print("index: "+index);
-			}			
-		}
+		return printable;
 	}
 
-	public void myRR(int quantumTime) {
+	public Queue RR(int quantumTime) {
 
-		Process[] temp = process, temp1 = null;
+		Process[] temp = process, temp1 = process;
+		Process usable = null;
 		Queue queue1 = new Queue();
 		Queue queue2 = new Queue();
 		int tempLength = temp.length;
 
+		// for(int i = 0; i < tempLength; i++) {
+		// 	System.out.print("P" + temp1[i].getProcessID() + " ");
+		// }
+		// System.out.println();
+
+		int[] bursts = new int[tempLength];
+		int[] arrivals = new int[tempLength];
+
+		for(int i = 0; i < tempLength; i++) {
+			bursts[i] = temp[i].getBurstTime();
+			arrivals[i] = temp[i].getArrivalTime();
+		}
+
 		quicksort(temp, 0, temp.length - 1, 0);
-		for(int i = 0; i < temp.length; i++) {
-			System.out.print(temp[i].getProcessID() + " ");
-		}
-		System.out.println();
-		for(int i = 0; i < temp.length; i++) {
-			System.out.print(temp[i].getArrivalTime() + " ");
-		}
-		System.out.println();
 
-		int smallestArrival = temp[0].getArrivalTime();
-		int totalArrival = totalTime(0);
-		int totalBurst = totalTime(1);
-		System.out.println(totalArrival + "|" + totalBurst + "||" + tempLength);
-
-		queue1.initialProcess(temp[0]);
-		// queue1.initialProcess(new Process(30, 0, 0, 0));
-		// queue1.enqueue(temp[0]);
+		// for(int i = 0; i < tempLength; i++) {
+		// 	System.out.print("P" + temp1[i].getProcessID() + " ");
+		// }
+		// System.out.println();
+		
 		queue2.initialProcess(temp[0]);
 		for(int i = 1; i < temp.length; i++) {
 			queue2.enqueue(temp[i]);
 		}
-		// temp1 = new Process[temp.length];
-		// temp1 = queue1.getProcess();
-		// System.out.println();
-		// for(int i = 0; i < temp.length + 1; i++) {
-		// 	if(i == 0) {
-		// 		queue1.enqueue(queue1.dequeue());
-		// 		System.out.print(queue1.dequeue().getProcessID() + "|");
-		// 	} else {
-		// 		System.out.print(queue1.dequeue().getProcessID() + " ");
-		// 	}
-		// }
-		// System.out.println("\n");
 
-		// int count = 0;
-		// int bound = 0;
-		// temp1 = temp;
-		// System.out.println(tempLength + "|" + (tempLength - 1));
-		System.out.println();
-		// for(int i = 0; i < temp1[0].getArrivalTime(); i++) {
-		// 	System.out.println(i + "|");
-		// 	bound++;
-		// }
-		// Process unused1 = queue1.dequeue();
-		// Process unused2 = queue2.dequeue();
-		Process usable = null, checkable = null;
-		int countable = 0, maxCount = queue1.getIndex();
-		// int boundary = temp[0].getArrivalTime();
+		int countTempLength = tempLength;
+		// int quantumTimeLoop = temp[0].getArrivalTime();
 
-		// for(int i = temp1[0].getArrivalTime(); i < (totalBurst + bound); i++) {
-		// 	System.out.print(i + "|");
-		// 	countable = 0;
-		// 	while(count < tempLength) {
-		// 		int tempArrival = temp1[count].getArrivalTime();
-		// 		if(i == tempArrival) {
-		// 			System.out.print(" " + queue1.getIndex() + " ");
-		// 			// if(count == 0) {
-		// 			// 	queue1.initialProcess(temp1[count]);
-		// 			// 	// System.out.print("||");
-		// 			// 	queue1.enqueue(temp1[count]);
-		// 			// } else {
-		// 			// 	queue1.enqueue(temp1[count]);
-		// 			// }
-		// 			countable++;
-		// 			// System.out.print(queue1.getIndex());
-		// 			int qc = quantumTime * countable;
-		// 			// System.out.print("=" + qc + "=");
+		while(queue2.getIndex() > 0) {
+			usable = queue2.dequeue();
 
-		// 			// if(queue1.getIndex() > 0) {
-		// 				// usable = queue1.dequeue();
-		// 				System.out.print(" P" + temp1[count].getProcessID() + " ");
-
-		// 				if(temp1[count].getBurstTime() > quantumTime) {
-		// 					temp1[count].setBurstTime(temp1[count].getBurstTime() - quantumTime);
-		// 					temp1[count].setArrivalTime(temp1[count].getArrivalTime() + qc);
-		// 					// queue1.enqueue(temp1[count]);
-		// 					// countable++;
-		// 				} else if(temp1[count].getBurstTime() < quantumTime && temp1[count].getBurstTime() != 0) {
-		// 					temp1[count].setBurstTime(0);
-		// 				}
-		// 			// }
-		// 			// System.out.print("=" + qc + "=");
-		// 		}
-		// 		count++;
-		// 	}
-
-		/*while(countable < maxCount) {
-			// System.out.print(countable + "|");
-
-			usable = queue1.dequeue();
 			int currentBurst = usable.getBurstTime();
 			int currentArrival = usable.getArrivalTime();
-			if(currentBurst >= quantumTime) {
+
+			if(currentBurst > quantumTime) {
 				usable.setBurstTime(currentBurst - quantumTime);
 				usable.setArrivalTime(currentArrival + quantumTime);
-				System.out.print("P" + usable.getProcessID() + " ");
-				queue1.enqueue(usable);
-			} else if(currentBurst < quantumTime && currentBurst != 0) {
-				usable.setBurstTime(currentBurst - currentBurst);
-				System.out.print("P" + usable.getProcessID() + " ");
-				countable++;
-			}
+				// System.out.print("P" + usable.getProcessID() + " ");
+				// quantumTimeLoop += quantumTime;
 
-			if(queue1.getIndex() == 1) {
-				queue1.enqueue(new Process(30, 100, 0, 0));
-				break;
-			}
-			// if(countable == maxCount - 1) {
-			// 	break;
-			// }
-			// System.out.println("|" + countable);
-		}
-		usable = queue1.dequeue();
-		System.out.print("|P" + usable.getProcessID() + " ");*/
-
-		int countTempLength = 0;
-		int quantumTimeLoop = temp[0].getArrivalTime();
-		Process curSmal = null, minSmal = null;
-
-		// while(queue1.getIndex() > 0) {
-			
-		// }
-		// while(true) {
-			/*
-			try {
-				usable = queue1.dequeue();
-			} catch(NullPointerException npEx) {
-				// for(int i = 0; i < tempLength; i++) {
-				// 	curSmal = queue2.dequeue();
-				// 	if(i == 0) {
-				// 		minSmal = curSmal;
-				// 	} else {
-				// 		if(curSmal.getArrivalTime() < minSmal.getArrivalTime()) {
-				// 			minSmal = curSmal;
-				// 		}
-				// 	}
-				// 	queue2.enqueue(curSmal);
-				// }
-				queue1.enqueue(temp[countTempLength]);
-				// queue1.enqueue(usable);
-				// continue;
-			}
-			// System.out.print("|" + usable.getProcessID() + "|");
-			if(usable.getProcessID() == 30) {
-				queue1.enqueue(usable);
-			} else {
-				int currentBurst = usable.getBurstTime();
-				int currentArrival = usable.getArrivalTime();
-				if(currentBurst > quantumTime) {
-					usable.setBurstTime(currentBurst - quantumTime);
-					usable.setArrivalTime(currentArrival + quantumTime);
-					System.out.print("P" + usable.getProcessID() + " ");
-					// queue1.enqueue(usable);
-					quantumTimeLoop += quantumTime;
-				} else if(currentBurst <= quantumTime && currentBurst != 0) {
-					usable.setBurstTime(currentBurst - currentBurst);
-					System.out.print("P" + usable.getProcessID() + " ");
-					countTempLength++;
-					quantumTimeLoop += currentBurst;
-					// countable++;
-				}
-				// System.out.print("=" + countTempLength + "-" + tempLength + "= ");
-
-				for(int i = 0; i < tempLength; i++) {
-					checkable = queue2.dequeue();
-					if(checkable.getArrivalTime() <= quantumTimeLoop) {
-						// System.out.print("|" + checkable.getProcessID() + "|");
-						if(checkable.getProcessID() != usable.getProcessID()) {
-							queue1.enqueue(checkable);
+				for(int j = 0; j < quantumTime; j++) {
+					for(int i = 0; i < tempLength; i++) {
+						if(queue1.getIndex() == 0) {
+							if(temp1[i].getProcessID() == usable.getProcessID())
+								queue1.initialProcess(temp1[i]);
+						} else {
+							if(temp1[i].getProcessID() == usable.getProcessID())
+								queue1.enqueue(temp1[i]);
 						}
 					}
-					queue2.enqueue(checkable);
 				}
-				// queue1.enqueue(usable);
-				*/
-			// }
+			} else if(currentBurst <= quantumTime && currentBurst != 0) {
+				usable.setBurstTime(currentBurst - currentBurst);
+				// System.out.print("P" + usable.getProcessID() + " ");
+				countTempLength--;
+				// quantumTimeLoop += currentBurst;
 
-			// if(countTempLength == tempLength) {
-			// 	break;
-			// }
+				for(int j = 0; j < currentBurst; j++) {
+					for(int i = 0; i < tempLength; i++) {
+						if(queue1.getIndex() == 0) {
+							if(temp1[i].getProcessID() == usable.getProcessID())
+								queue1.initialProcess(temp1[i]);
+						} else {
+							if(temp1[i].getProcessID() == usable.getProcessID())
+								queue1.enqueue(temp1[i]);
+						}
+					}
+				}
+			}
+			
+			queue2.enqueue(usable);
+
+			if(countTempLength == 0) {
+				break;
+			}
+		}
+
+		// while(queue1.getIndex() > 0) {
+		// 	Process pr = queue1.dequeue();
+
+		// 	pr.setBurstTime(bursts[pr.getProcessID() - 1]);
+		// 	pr.setArrivalTime(arrivals[pr.getProcessID() - 1]);
+
+		// 	System.out.print("P" + pr.getProcessID() + "|" + pr.getBurstTime() + "|" + pr.getArrivalTime() + " ");
 		// }
 
-			// System.out.println();
-			// count = 0;
-		// }
-		// System.out.println();
-		// for(int i = 0; i < countable; i++) {
-		// 	System.out.println(queue1.dequeue().getProcessID() + " ");
-		// }
+		Queue printQueue = new Queue();
+		Queue timesQueue = new Queue();
+		Queue printable = new Queue();
+		int starter = temp[0].getArrivalTime();
+		Process sample = null;
+
+		while(queue1.getIndex() > 0) {
+			sample = queue1.dequeue();
+
+			sample.setBurstTime(bursts[sample.getProcessID() - 1]);
+			sample.setArrivalTime(arrivals[sample.getProcessID() - 1]);
+
+			if(printQueue.getIndex() == 0 || timesQueue.getIndex() == 0) {
+				printQueue.initialProcess(sample);
+				timesQueue.initialProcess(sample);
+				printable.initialProcess(sample);
+			} else {
+				printQueue.enqueue(sample);
+				timesQueue.enqueue(sample);
+				printable.enqueue(sample);
+			}
+		}
+
+		System.out.println();
+		ganttChart(printQueue, timesQueue, starter);
+		System.out.println();
+
+		return printable;
 	}
 	
 	//other methods
@@ -914,10 +715,10 @@ public class CPUSched {
 	}
 	
 	private void swap(Process arr[], int i, int j){
-		Process temp = arr[i];
+		Process temporary = arr[i];
 		arr[i] = arr[j];
-		arr[j] = temp;
-		arr[j] = temp;
+		arr[j] = temporary;
+		arr[j] = temporary;
 	}
 
 	private void ganttChart(Queue printQueue, Queue timesQueue, int starter) {
@@ -941,12 +742,12 @@ public class CPUSched {
 		
 		while(timesQueue.getIndex() > 0) {
 			able = timesQueue.dequeue();
-			arrivals += able.getBurstTime();
+			arrivals += 1;
 			if(timesQueue.getIndex() == buff) {
 				if(able.getProcessID() >= 1 && able.getProcessID() <= 9) {
 					if(able.getArrivalTime() >= 0 && able.getArrivalTime() <= 9)
 						System.out.print(able.getArrivalTime() + "    ");
-					else
+					else 
 						System.out.print(able.getArrivalTime() + "   ");
 					arrivals += able.getArrivalTime();
 				} else {
@@ -996,16 +797,16 @@ public class CPUSched {
 		
 		// System.out.println("\nFCFS"); // ok
 		// sched.FCFS();
-		System.out.println("\nSJF");  // ok
-		sched.SJF();
+		// System.out.println("\nSJF");  // ok
+		// sched.SJF();
 		// System.out.println("\nSRTF");  // adjust burst time
 		// sched.SRTF();
 		// System.out.println("\nNPrio"); // ok
 		// sched.NPrio();
 		// System.out.println("\nPrio"); // adjust burst time
 		// sched.Prio();
-		// System.out.println("\nRound Robin");
-		// sched.myRR(2);
+		System.out.println("\nRound Robin");
+		sched.RR(2);
 		
 		int num[] = {1, 0, 0, 0, 0, 0,0};
 		

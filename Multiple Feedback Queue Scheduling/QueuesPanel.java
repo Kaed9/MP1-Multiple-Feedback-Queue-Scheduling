@@ -21,8 +21,8 @@ public class QueuesPanel extends JPanel {
 
 	// private JPanel[] panelArr = new JPanel[100];
 	// private JLabel[] labelArr = new JLabel[100];
-	private JPanel[][] panelArr;
-	private JLabel[][] labelArr, time;
+	private JPanel[] panelArr;
+	private JLabel[] labelArr, time;
 	
 	private JLabel[] queueLabel;
 	private JPanel[] quPane;
@@ -32,7 +32,7 @@ public class QueuesPanel extends JPanel {
 	private Font font2 = new Font("Verdana", Font.PLAIN, 20);
 
 	// private AdjustmentListener listener = new MyAdjustmentListener();
-	private int value = 0, y = 120;
+	private int value = 0, y = 80;
 	private Random rand = new Random();
 	
 	public QueuesPanel() {
@@ -111,7 +111,7 @@ public class QueuesPanel extends JPanel {
 
 		panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder());
-		panel.setBounds(100, 120, 620, 150);
+		panel.setBounds(100, 80, 620, 150);
 
 		panel.add(scrollPane, BorderLayout.CENTER);
 		add(panel);
@@ -150,7 +150,147 @@ public class QueuesPanel extends JPanel {
 		}
 	}*/
 	
-	public void addToQueue(Process[] temp) {
+	public void addToQueue(Queue printable, int globalMaxProcesses, SummaryPanel summaryPanel) {
+
+		// Queue printable = printQueue;
+		Process after = null, before = null;
+		Queue valid = new Queue();
+		int checker = printable.getIndex(), arrival = 0, interval = 0;
+		int combi1 = 0;
+
+		while(printable.getIndex() > 0) {
+			after = printable.dequeue();
+			if(printable.getIndex() == checker - 1) {
+				before = after;
+
+				arrival = after.getArrivalTime();
+				if(arrival > 0) {
+					while(arrival > 0) {
+						if(valid.getIndex() == 0)
+							valid.initialProcess(new Process(0, 0, 0, 0));
+						else
+							valid.enqueue(new Process(0, 0, 0, 0));
+
+						arrival--;
+						combi1++;
+					}
+				}
+			}
+
+			if(after.getProcessID() != before.getProcessID() && before.getBurstTime() == 0) {
+				if(after.getArrivalTime() > combi1) {
+					interval = after.getArrivalTime() - combi1;
+					for(int i = 0; i < interval; i++) {
+						valid.enqueue(new Process(0, 0, 0, 0));
+						combi1++;
+					}
+				} else {
+					valid.enqueue(after);
+					combi1++;
+				}
+			} else {
+				if(valid.getIndex() == 0)
+					valid.initialProcess(after);
+				else
+					valid.enqueue(after);
+
+				combi1++;
+			}
+
+			before = after;
+		}
+
+		// System.out.println(valid.getIndex() + " " + printable.getIndex() + "\n");
+		// System.out.print("\n|");
+		// while(combi1 > 0) {
+		// 	System.out.print(" P" + valid.dequeue().getProcessID() + " |");
+		// 	combi1--;
+		// }
+
+		int maxBurstTime = valid.getIndex();
+		int index = 0;
+		int x1 = maxBurstTime * 40;
+		final int combi = combi1;
+		quHolder.setPreferredSize(new Dimension(x1, 80));
+		
+		Color[] color = new Color[globalMaxProcesses + 1];
+		color[0] = new Color(255, 255, 255);
+		for(int i = 1; i < globalMaxProcesses + 1; i++) {
+			color[i] = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+		}
+
+		int[] firstExecution = new int[globalMaxProcesses];
+		int[] completion = new int[globalMaxProcesses];
+		int[] burstChecker = new int[globalMaxProcesses];
+		int[] arrivalChecker = new int[globalMaxProcesses];
+		for(int i = 0; i < globalMaxProcesses; i++) {
+			firstExecution[i] = 0;
+			completion[i] = 0;
+			burstChecker[i] = 0;
+			arrivalChecker[i] = 0;
+		}
+
+		panelArr = new JPanel[maxBurstTime];
+		labelArr = new JLabel[maxBurstTime];
+		time = new JLabel[maxBurstTime];
+
+		new Thread() {
+			public void run() {
+				int x = 0, maxi = 0;
+				Process assign = null;
+				try {
+					for(int i = 0; i < combi; i++) {
+						assign = valid.dequeue();
+						repaint();
+						revalidate();
+
+						panelArr[i] = new JPanel(null);
+
+						if(assign.getProcessID() == 0)
+							labelArr[i] = new JLabel(" ", JLabel.CENTER);
+						else {
+							labelArr[i] = new JLabel("P" + assign.getProcessID(), JLabel.CENTER);
+
+							if(firstExecution[assign.getProcessID() - 1] == 0) {
+								firstExecution[assign.getProcessID() - 1] = maxi - 1;
+								arrivalChecker[assign.getProcessID() - 1] = assign.getArrivalTime();
+							}
+
+							burstChecker[assign.getProcessID() - 1] += 1;
+							if(burstChecker[assign.getProcessID() - 1] == assign.getBurstTime())
+								completion[assign.getProcessID() - 1] = maxi;
+						}
+
+						if(maxi == 0) {
+							maxi++;
+							time[i] = new JLabel("0         " + maxi, JLabel.LEFT);
+						} else
+							time[i] = new JLabel("" + maxi, JLabel.RIGHT);
+
+						labelArr[i].setOpaque(true);
+						labelArr[i].setBackground(color[assign.getProcessID()]);
+						labelArr[i].setFont(font2);
+						labelArr[i].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+						labelArr[i].setBounds(0, 0, 40, 38);
+						time[i].setBounds(0, 40, 40, 38);
+
+						panelArr[i].add(labelArr[i]);
+						panelArr[i].add(time[i]);
+						panelArr[i].setBounds(x, 0, 40, 76);
+						x += 40;
+
+						quPane[index].add(panelArr[i]);
+
+						Thread.sleep(50);
+						maxi++;
+					}
+					summaryPanel.addToTime(globalMaxProcesses, firstExecution, completion, burstChecker, arrivalChecker);
+				} catch(InterruptedException iEx) { }
+			}
+		}.start();
+	}
+
+	/*public void addToQueue(Process[] temp) {
 
 		int maxBurstTime = 0;
 		int index = 0;
@@ -172,7 +312,7 @@ public class QueuesPanel extends JPanel {
 				int x = 0;
 				int maxi = 1;
 				try {
-					/*
+					
 					panelArr[0] = new JPanel[initialArrival];
 					labelArr[0] = new JLabel[initialArrival];
 					time[0] = new JLabel[initialArrival];
@@ -207,7 +347,7 @@ public class QueuesPanel extends JPanel {
 						quPane[index].add(panelArr[0][i]);
 
 						Thread.sleep(100);
-					}*/
+					}
 
 					for(int i = 0; i < temp.length; i++) {
 						panelArr[i] = new JPanel[temp[i].getBurstTime()];
@@ -248,14 +388,13 @@ public class QueuesPanel extends JPanel {
 							Thread.sleep(50);
 							maxi++;
 						}
-
 					}
 				} catch(InterruptedException iEx) { }
 			}
 		}.start();
 
 		// bar.removeAdjustmentListener(listener);
-	}
+	}*/
 
 	public void clearQueuesPanel() {
 

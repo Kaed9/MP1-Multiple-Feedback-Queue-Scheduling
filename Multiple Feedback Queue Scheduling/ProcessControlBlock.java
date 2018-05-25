@@ -95,7 +95,7 @@ public class ProcessControlBlock extends JPanel {
 		processPanel = new JPanel();
 		processPanel.setLayout(null);
 		// processPanel.setBackground(Color.RED);
-		processPanel.setBounds(20, 80, 460, 330);
+		processPanel.setBounds(20, 80, 460, 280);
 		// processPanel.setSize(460, 540);
 		// processPanel.setLocation(20, 110);
 		processPane();
@@ -132,7 +132,7 @@ public class ProcessControlBlock extends JPanel {
 				scrollPane[i] = new JScrollPane(table[i], JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				// panel[i].add(scrollPane[i], BorderLayout.CENTER);
 			} else {
-				scrollPane[i] = new JScrollPane(table[i]);
+				scrollPane[i] = new JScrollPane(table[i], JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				// panel[i].add(scrollPane[i], BorderLayout.CENTER);
 				bar = scrollPane[i].getVerticalScrollBar();
 				bar.addAdjustmentListener(listener);
@@ -141,7 +141,7 @@ public class ProcessControlBlock extends JPanel {
 			// DefaultCaret caret = (DefaultCaret)table[i].getCaret();
 			// caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
-			scrollPane[i].setBounds(0, 70, sizes[i], 260);
+			scrollPane[i].setBounds(0, 70, sizes[i], 210);
 			// scrollPane[i].setSize(sizes[i], 470);
 			// scrollPane[i].setLocation(0, 70);
 			scrollPane[i].setBorder(BorderFactory.createEmptyBorder());
@@ -157,7 +157,7 @@ public class ProcessControlBlock extends JPanel {
 				panel[i].setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, Color.BLACK));
 				scrollPane[i].setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 			}
-			panel[i].setBounds(count, 0, sizes[i], 330);
+			panel[i].setBounds(count, 0, sizes[i], 280);
 			// panel[i].setSize(sizes[i], 540);
 			// panel[i].setLocation(count, 0);
 			processPanel.add(panel[i]);
@@ -240,8 +240,8 @@ public class ProcessControlBlock extends JPanel {
 		// }
 	}
 
-	public void generateTests(String[] inputs) {
-
+	public int generateTests(String[] inputs) {
+		
 		if(inputs[0] == "First Come First Serve") {
 			if(inputs[1] == "Test #1") {
 				processList = new Process[10];
@@ -353,6 +353,8 @@ public class ProcessControlBlock extends JPanel {
 			table[3].append("      " + processList[i].getPriority() + "\n");
 			table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 		}
+
+		return processList.length;
 	}
 
 	public Process[] getProcessList() {
