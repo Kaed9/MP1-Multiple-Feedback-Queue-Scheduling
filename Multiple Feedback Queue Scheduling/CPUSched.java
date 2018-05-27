@@ -509,45 +509,48 @@ public class CPUSched {
 		}
 
 		int countTempLength = tempLength;
-		// int quantumTimeLoop = temp[0].getArrivalTime();
+		int quantumTimeLoop = temp[0].getArrivalTime();
 
-		while(queue2.getIndex() > 0) {
+		while(true) {
 			usable = queue2.dequeue();
+			// System.out.print("P" + usable.getProcessID() + " ");
 
 			int currentBurst = usable.getBurstTime();
 			int currentArrival = usable.getArrivalTime();
 
-			if(currentBurst > quantumTime) {
-				usable.setBurstTime(currentBurst - quantumTime);
-				usable.setArrivalTime(currentArrival + quantumTime);
-				// System.out.print("P" + usable.getProcessID() + " ");
-				// quantumTimeLoop += quantumTime;
+			if(usable.getArrivalTime() <= quantumTimeLoop) {
+				if(currentBurst > quantumTime) {
+					usable.setBurstTime(currentBurst - quantumTime);
+					usable.setArrivalTime(currentArrival + quantumTime);
+					// System.out.print("P" + usable.getProcessID() + " ");
+					quantumTimeLoop += quantumTime;
 
-				for(int j = 0; j < quantumTime; j++) {
-					for(int i = 0; i < tempLength; i++) {
-						if(queue1.getIndex() == 0) {
-							if(temp1[i].getProcessID() == usable.getProcessID())
-								queue1.initialProcess(temp1[i]);
-						} else {
-							if(temp1[i].getProcessID() == usable.getProcessID())
-								queue1.enqueue(temp1[i]);
+					for(int j = 0; j < quantumTime; j++) {
+						for(int i = 0; i < tempLength; i++) {
+							if(queue1.getIndex() == 0) {
+								if(temp1[i].getProcessID() == usable.getProcessID())
+									queue1.initialProcess(temp1[i]);
+							} else {
+								if(temp1[i].getProcessID() == usable.getProcessID())
+									queue1.enqueue(temp1[i]);
+							}
 						}
 					}
-				}
-			} else if(currentBurst <= quantumTime && currentBurst != 0) {
-				usable.setBurstTime(currentBurst - currentBurst);
-				// System.out.print("P" + usable.getProcessID() + " ");
-				countTempLength--;
-				// quantumTimeLoop += currentBurst;
+				} else if(currentBurst <= quantumTime && currentBurst != 0) {
+					usable.setBurstTime(currentBurst - currentBurst);
+					// System.out.print("P" + usable.getProcessID() + " ");
+					countTempLength--;
+					quantumTimeLoop += currentBurst;
 
-				for(int j = 0; j < currentBurst; j++) {
-					for(int i = 0; i < tempLength; i++) {
-						if(queue1.getIndex() == 0) {
-							if(temp1[i].getProcessID() == usable.getProcessID())
-								queue1.initialProcess(temp1[i]);
-						} else {
-							if(temp1[i].getProcessID() == usable.getProcessID())
-								queue1.enqueue(temp1[i]);
+					for(int j = 0; j < currentBurst; j++) {
+						for(int i = 0; i < tempLength; i++) {
+							if(queue1.getIndex() == 0) {
+								if(temp1[i].getProcessID() == usable.getProcessID())
+									queue1.initialProcess(temp1[i]);
+							} else {
+								if(temp1[i].getProcessID() == usable.getProcessID())
+									queue1.enqueue(temp1[i]);
+							}
 						}
 					}
 				}
@@ -559,6 +562,7 @@ public class CPUSched {
 				break;
 			}
 		}
+		System.out.println();
 
 		// while(queue1.getIndex() > 0) {
 		// 	Process pr = queue1.dequeue();

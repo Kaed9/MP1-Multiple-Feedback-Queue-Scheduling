@@ -252,7 +252,10 @@ public class QueuesPanel extends JPanel {
 							labelArr[i] = new JLabel("P" + assign.getProcessID(), JLabel.CENTER);
 
 							if(firstExecution[assign.getProcessID() - 1] == 0) {
-								firstExecution[assign.getProcessID() - 1] = maxi - 1;
+								if(assign.getArrivalTime() == 0)
+									firstExecution[assign.getProcessID() - 1] = 0;
+								else
+									firstExecution[assign.getProcessID() - 1] = maxi - 1;
 								arrivalChecker[assign.getProcessID() - 1] = assign.getArrivalTime();
 							}
 
