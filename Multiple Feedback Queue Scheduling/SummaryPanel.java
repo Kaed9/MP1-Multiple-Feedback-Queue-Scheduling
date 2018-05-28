@@ -144,7 +144,7 @@ public class SummaryPanel extends JPanel {
 		}
 	}
 
-	public void addToTime(int maxProcesses, int[] firstExecution, int[] completion, int[] burstTime, int[] arrivalTime) {
+	public void addToTime(int maxProcesses, int[] firstExecution, int[] completion, int[] burstTime, int[] arrivalTime, String algo) {
 
 		// int[] process = new int[maxProcesses];
 		// int size = queue.getIndex();
@@ -155,8 +155,8 @@ public class SummaryPanel extends JPanel {
 
 		// }
 
-		int[] rTime = responseTime(firstExecution, arrivalTime);
-		int[] tTime = turnaroundTime(completion, arrivalTime);
+		int[] rTime = responseTime(firstExecution, arrivalTime/*, algo*/);
+		int[] tTime = turnaroundTime(completion, arrivalTime, algo);
 		int[] wTime = waitingTime(tTime, burstTime);
 		float[] aTime = averageTimes(rTime, tTime, wTime);
 
@@ -177,23 +177,31 @@ public class SummaryPanel extends JPanel {
 		aveField[2].setText("" + aTime[2]);
 	}
 
-	public int[] responseTime(int[] firstExecution, int[] arrivalTime) {
+	public int[] responseTime(int[] firstExecution, int[] arrivalTime/*, String algo*/) {
 
 		// response time = first execution - arrival time
 		int[] rTime = new int[firstExecution.length];
+		// System.out.print(algo + "|");
 		for(int i = 0; i < firstExecution.length; i++) {
-			rTime[i] = firstExecution[i] - arrivalTime[i];
+			// if(algo.equals("Round Robin"))
+				// rTime[i] = firstExecution[i];
+			// else
+				rTime[i] = firstExecution[i] - arrivalTime[i];
 		}
 
 		return rTime;
 	}
 
-	public int[] turnaroundTime(int[] completion, int[] arrivalTime) {
+	public int[] turnaroundTime(int[] completion, int[] arrivalTime, String algo) {
 
-		// turnaround time = completion - arrival time
+		// turnaround time = completion - arrival time || waitingTime + burst time
 		int[] tTime = new int[completion.length];
+		System.out.println();
 		for(int i = 0; i < completion.length; i++) {
-			tTime[i] = completion[i] - arrivalTime[i];
+			if(algo.equals("Round Robin"))
+				tTime[i] = completion[i];
+			else
+				tTime[i] = completion[i] - arrivalTime[i];
 		}
 
 		return tTime;
@@ -201,9 +209,11 @@ public class SummaryPanel extends JPanel {
 
 	public int[] waitingTime(int[] tTime, int[] burstTime) {
 
-		// waiting time = turnaround time - burst time
+		// waiting time = turnaround time - burst time || first execution - arrival time
 		int[] wTime = new int[tTime.length];
 		for(int i = 0; i < tTime.length; i++) {
+			// if(algo == "Round Robin")
+				// wTime[i]
 			wTime[i] = tTime[i] - burstTime[i];
 		}
 

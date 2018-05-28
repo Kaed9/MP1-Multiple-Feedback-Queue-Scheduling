@@ -172,33 +172,38 @@ public class GUI extends JFrame implements ActionListener {
 			sched = new CPUSched(processControlBlock.getProcessList());
 			// System.out.println("SJF");
 			String algorithm = "";
+			int quantumTime = 0;
 			for(String temp : inputs1[2].split("\n")) {
 				algorithm = temp;
+			}
+			for(String temp : inputs1[3].split("\n")) {
+				quantumTime = Integer.parseInt(temp);
 			}
 			// System.out.println(algorithm);
 			Queue printable = null;
 			switch(algorithm) {
 				case "First Come First Serve":
-					printable = sched.FCFS(); // works
+					printable = sched.FCFS();
 					break;
 				case "Shortest Job First":
-					printable = sched.SJF(); // works
+					printable = sched.SJF();
 					break;
 				case "Shortest Remaining Time First":
-					printable = sched.SRTF(); // works
+					printable = sched.SRTF();
 					break;
 				case "Preemptive Priority Scheduling":
-					printable = sched.Prio(); // works
+					printable = sched.Prio();
 					break;
 				case "Non-preemptive Priority Scheduling":
-					printable = sched.NPrio(); // works
+					printable = sched.NPrio();
 					break;
 				case "Round Robin":
-					printable = sched.RR(2); // sample quantum time // works
+					printable = sched.RR(quantumTime);
 					break;
 				default:
 					break;
 			}
+			// System.out.println("|" + algorithm + "|");
 			// String[] string = new String[temp.length];
 			// for(int i = 0; i < temp.length; i++) {
 			// 	string[i] = String.valueOf(temp[i].getProcessID());
@@ -222,12 +227,13 @@ public class GUI extends JFrame implements ActionListener {
 				printableLength--;
 			}
 
-			queuesPanel.addToQueue(printable, globalMaxProcesses, summaryPanel);
+			queuesPanel.addToQueue(printable, globalMaxProcesses, summaryPanel, algorithm);
 			infoPanel.addToField(infoQueue, infoQueue.getIndex());
 			// summaryPanel.addToTime(summaryTime, globalMaxProcesses);
 		} else if(event.getSource() == use) {
 			String[] inputs2 = JOptionPaneExample.chooseTests();
-			System.out.println(inputs2[1]);
+			int qT = Integer.parseInt(inputs2[2]);
+			// System.out.println(inputs2[1]);
 			queuesPanel.queuesHolder("1");
 			infoPanel.additionalInfo(inputs2[0], "none");
 			globalMaxProcesses = processControlBlock.generateTests(inputs2);
@@ -237,10 +243,10 @@ public class GUI extends JFrame implements ActionListener {
 			Queue printable = null;
 			switch(inputs2[0]) {
 				case "First Come First Serve":
-					printable = sched.FCFS(); // works
+					printable = sched.FCFS();
 					break;
 				case "Shortest Job First":
-					printable = sched.SJF(); // works
+					printable = sched.SJF();
 					break;
 				case "Shortest Remaining Time First":
 					printable = sched.SRTF();
@@ -249,10 +255,10 @@ public class GUI extends JFrame implements ActionListener {
 					printable = sched.Prio();
 					break;
 				case "Non-preemptive Priority Scheduling":
-					printable = sched.NPrio(); // works
+					printable = sched.NPrio();
 					break;
 				case "Round Robin":
-					printable = sched.RR(2); // sample quantum time
+					printable = sched.RR(qT);
 					break;
 				default:
 					break;
@@ -277,7 +283,7 @@ public class GUI extends JFrame implements ActionListener {
 				printableLength--;
 			}
 
-			queuesPanel.addToQueue(printable, globalMaxProcesses, summaryPanel);
+			queuesPanel.addToQueue(printable, globalMaxProcesses, summaryPanel, inputs2[0]);
 			infoPanel.addToField(infoQueue, infoQueue.getIndex());
 		} else if(event.getSource() == exit) {
 			System.exit(0);

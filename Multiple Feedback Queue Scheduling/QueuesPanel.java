@@ -150,7 +150,7 @@ public class QueuesPanel extends JPanel {
 		}
 	}*/
 	
-	public void addToQueue(Queue printable, int globalMaxProcesses, SummaryPanel summaryPanel) {
+	public void addToQueue(Queue printable, int globalMaxProcesses, SummaryPanel summaryPanel, String algo) {
 
 		// Queue printable = printQueue;
 		Process after = null, before = null;
@@ -241,6 +241,7 @@ public class QueuesPanel extends JPanel {
 				try {
 					for(int i = 0; i < combi; i++) {
 						assign = valid.dequeue();
+						// System.out.print("P" + assign.getProcessID() + "|" + maxi + " ");
 						repaint();
 						revalidate();
 
@@ -254,8 +255,10 @@ public class QueuesPanel extends JPanel {
 							if(firstExecution[assign.getProcessID() - 1] == 0) {
 								if(assign.getArrivalTime() == 0)
 									firstExecution[assign.getProcessID() - 1] = 0;
-								else
+								else //{
 									firstExecution[assign.getProcessID() - 1] = maxi - 1;
+									// System.out.print(maxi + " ");
+								// }
 								arrivalChecker[assign.getProcessID() - 1] = assign.getArrivalTime();
 							}
 
@@ -287,117 +290,11 @@ public class QueuesPanel extends JPanel {
 						Thread.sleep(50);
 						maxi++;
 					}
-					summaryPanel.addToTime(globalMaxProcesses, firstExecution, completion, burstChecker, arrivalChecker);
+					summaryPanel.addToTime(globalMaxProcesses, firstExecution, completion, burstChecker, arrivalChecker, algo);
 				} catch(InterruptedException iEx) { }
 			}
 		}.start();
 	}
-
-	/*public void addToQueue(Process[] temp) {
-
-		int maxBurstTime = 0;
-		int index = 0;
-		for(int i = 0; i < temp.length; i++) {
-			maxBurstTime += temp[i].getBurstTime();
-		}
-		int x1 = maxBurstTime * 40;
-		quHolder.setPreferredSize(new Dimension(x1, 80));
-		// int initialArrival = temp[0].getArrivalTime();
-
-		// bar.addAdjustmentListener(listener);
-		panelArr = new JPanel[temp.length + 1][];
-		labelArr = new JLabel[temp.length + 1][];
-		time = new JLabel[temp.length + 1][];
-
-		new Thread() {
-			public void run() {
-				Color color = null;
-				int x = 0;
-				int maxi = 1;
-				try {
-					
-					panelArr[0] = new JPanel[initialArrival];
-					labelArr[0] = new JLabel[initialArrival];
-					time[0] = new JLabel[initialArrival];
-					color = new Color(255, 255, 255);
-					for(int i = 0; i < initialArrival; i++) {
-						repaint();
-						revalidate();
-						if(i == 0) {
-							labelArr[0][i] = new JLabel(" ", JLabel.CENTER);
-							time[0][i] = new JLabel("0", JLabel.LEFT);
-						} else if(i == initialArrival - 1) {
-							labelArr[0][i] = new JLabel(" ", JLabel.CENTER);
-							time[0][i] = new JLabel("" + (initialArrival - 1), JLabel.RIGHT);
-						} else {
-							labelArr[0][i] = new JLabel(" ", JLabel.CENTER);
-							time[0][i] = new JLabel(" ", JLabel.CENTER);
-						}
-
-						labelArr[0][i].setOpaque(true);
-						labelArr[0][i].setBackground(color);
-						labelArr[0][i].setFont(font2);
-						labelArr[0][i].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-						labelArr[0][i].setBounds(0, 0, 40, 38);
-						time[0][i].setBounds(0, 40, 40, 38);
-
-						panelArr[0][i] = new JPanel(null);
-						panelArr[0][i].add(labelArr[0][i]);
-						panelArr[0][i].add(time[0][i]);
-						panelArr[0][i].setBounds(x, 0, 40, 76);
-						x += 40;
-
-						quPane[index].add(panelArr[0][i]);
-
-						Thread.sleep(100);
-					}
-
-					for(int i = 0; i < temp.length; i++) {
-						panelArr[i] = new JPanel[temp[i].getBurstTime()];
-						labelArr[i] = new JLabel[temp[i].getBurstTime()];
-						time[i] = new JLabel[temp[i].getBurstTime()];
-						color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
-						for(int j = 0; j < temp[i].getBurstTime(); j++) {
-							repaint();
-							revalidate();
-							if(j == 0) {
-								labelArr[i][j] = new JLabel("P" + temp[i].getProcessID(), JLabel.CENTER);
-								time[i][j] = new JLabel(" ", JLabel.LEFT);
-								if(i == 0)
-									time[i][j] = new JLabel("0", JLabel.LEFT);
-							} else if(j == temp[i].getBurstTime() - 1) {
-								labelArr[i][j] = new JLabel(" ", JLabel.CENTER);
-								time[i][j] = new JLabel("" + maxi, JLabel.RIGHT);
-							} else {
-								labelArr[i][j] = new JLabel(" ", JLabel.CENTER);
-								time[i][j] = new JLabel(" ", JLabel.CENTER);
-							}
-
-							labelArr[i][j].setOpaque(true);
-							labelArr[i][j].setBackground(color);
-							labelArr[i][j].setFont(font2);
-							labelArr[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-							labelArr[i][j].setBounds(0, 0, 40, 38);
-							time[i][j].setBounds(0, 40, 40, 38);
-
-							panelArr[i][j] = new JPanel(null);
-							panelArr[i][j].add(labelArr[i][j]);
-							panelArr[i][j].add(time[i][j]);
-							panelArr[i][j].setBounds(x, 0, 40, 76);
-							x += 40;
-
-							quPane[index].add(panelArr[i][j]);
-
-							Thread.sleep(50);
-							maxi++;
-						}
-					}
-				} catch(InterruptedException iEx) { }
-			}
-		}.start();
-
-		// bar.removeAdjustmentListener(listener);
-	}*/
 
 	public void clearQueuesPanel() {
 

@@ -35,9 +35,16 @@ public class JOptionPaneExample {
     private static JRadioButton[] tests = new JRadioButton[3];
     private static ButtonGroup group2;
 
+    private static JPanel[] quantumPanel;
+    private static JTextField[] quantumField;
+
+    private static JLabel qLabel;
+    private static JTextField qField;
+    private static JPanel sPanel;
+
     private static String[] inputs = new String[5];
-    private static String[] inputs1 = new String[3];
-    private static String[] inputs2 = new String[2];
+    private static String[] inputs1 = new String[4];
+    private static String[] inputs2 = new String[3];
     private static String[] strings = {"PID", "Arrival Time", "CPU Burst Time", "Priority"};
     private static Object[] values = {"Submit", "Cancel"};
     private static String[] algorithms = {"First Come First Serve", "Shortest Job First", "Shortest Remaining Time First", "Preemptive Priority Scheduling", "Non-preemptive Priority Scheduling", "Round Robin"};
@@ -234,8 +241,10 @@ public class JOptionPaneExample {
         if(value == 0) {
             inputs1[0] = field1.getText();
             inputs1[2] = "";
+            inputs1[3] = "";
             for(int i = 0; i < maxQueue; i++) {
                 inputs1[2] += String.valueOf(comboBox[i].getSelectedItem()) + "\n";
+                inputs1[3] += quantumField[i].getText() + "\n";
                 // System.out.println(String.valueOf(comboBox[i].getSelectedItem()));
             }
 
@@ -324,14 +333,23 @@ public class JOptionPaneExample {
                 boxName = new JLabel[maximum];
                 comboBox = new JComboBox[maximum];
                 boxHold = new JPanel[maximum];
+                quantumField = new JTextField[maximum];
+                quantumPanel = new JPanel[maximum];
                 for(int i = 0; i < maximum; i++) {
                     boxName[i] = new JLabel("Q" + (i + 1) + "\t");
                     comboBox[i] = new JComboBox(algorithms);
                     comboBox[i].setSelectedIndex(0);
 
+                    quantumField[i] = new JTextField(2);
+                    JLabel quantumLabel = new JLabel("Quantum Time\t", JLabel.RIGHT);
+                    quantumPanel[i] = new JPanel(new BorderLayout());
+                    quantumPanel[i].add(quantumLabel, BorderLayout.WEST);
+                    quantumPanel[i].add(quantumField[i], BorderLayout.CENTER);
+
                     boxHold[i] = new JPanel(new BorderLayout());
                     boxHold[i].add(boxName[i], BorderLayout.WEST);
                     boxHold[i].add(comboBox[i], BorderLayout.CENTER);
+                    boxHold[i].add(quantumPanel[i], BorderLayout.EAST);
                     comboHold.add(boxHold[i]);
                     comboHold.repaint();
                     comboHold.revalidate();
@@ -360,14 +378,24 @@ public class JOptionPaneExample {
                 boxName = new JLabel[maximum];
                 comboBox = new JComboBox[maximum];
                 boxHold = new JPanel[maximum];
+                quantumField = new JTextField[maximum];
+                quantumPanel = new JPanel[maximum];
                 for(int i = 0; i < maximum; i++) {
                     boxName[i] = new JLabel("Q" + (i + 1) + "\t");
                     comboBox[i] = new JComboBox(algorithms);
                     comboBox[i].setSelectedIndex(0);
 
+                    quantumField[i] = new JTextField(2);
+                    quantumField[i].setText("0");
+                    JLabel quantumLabel = new JLabel("Time Quantum\t", JLabel.RIGHT);
+                    quantumPanel[i] = new JPanel(new BorderLayout());
+                    quantumPanel[i].add(quantumLabel, BorderLayout.WEST);
+                    quantumPanel[i].add(quantumField[i], BorderLayout.CENTER);
+
                     boxHold[i] = new JPanel(new BorderLayout());
                     boxHold[i].add(boxName[i], BorderLayout.WEST);
                     boxHold[i].add(comboBox[i], BorderLayout.CENTER);
+                    boxHold[i].add(quantumPanel[i], BorderLayout.EAST);
                     comboHold.add(boxHold[i]);
                     comboHold.repaint();
                     comboHold.revalidate();
@@ -393,6 +421,7 @@ public class JOptionPaneExample {
         int value = JOptionPane.showOptionDialog(null, getTestPanel(), "Test Cases", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, values, values[0]);
         if(value == 0) {
             inputs2[0] = String.valueOf(algoBox.getSelectedItem());
+            inputs2[2] = qField.getText();
         }
 
         return inputs2;
@@ -411,6 +440,14 @@ public class JOptionPaneExample {
         algoBox = new JComboBox(algorithms);
         algoBox.setSelectedIndex(0);
 
+        qLabel = new JLabel("Enter desired time quantum: ", JLabel.CENTER);
+        qField = new JTextField(2);
+        qField.setText("0");
+
+        sPanel = new JPanel(new FlowLayout());
+        sPanel.add(qLabel);
+        sPanel.add(qField);
+
         testNumLabel = new JLabel("Choose test number: ", JLabel.CENTER);
         group2 = new ButtonGroup();
         for(int i = 0; i < 3; i++) {
@@ -427,6 +464,7 @@ public class JOptionPaneExample {
         mid.add(right, BorderLayout.CENTER);
         panel2.add(top2, BorderLayout.NORTH);
         panel2.add(mid, BorderLayout.SOUTH);
+        panel2.add(sPanel, BorderLayout.CENTER);
 
         algoBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
