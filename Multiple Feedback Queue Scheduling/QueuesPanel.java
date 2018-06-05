@@ -111,7 +111,7 @@ public class QueuesPanel extends JPanel {
 
 		panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder());
-		panel.setBounds(100, 80, 620, 150);
+		panel.setBounds(100, 80, 620, 250);
 
 		panel.add(scrollPane, BorderLayout.CENTER);
 		add(panel);
@@ -155,6 +155,7 @@ public class QueuesPanel extends JPanel {
 		// Queue printable = printQueue;
 		Process after = null, before = null;
 		Queue valid = new Queue();
+		Queue minimized = new Queue();
 		int checker = printable.getIndex(), arrival = 0, interval = 0;
 		int combi1 = 0;
 
@@ -165,6 +166,10 @@ public class QueuesPanel extends JPanel {
 
 				arrival = after.getArrivalTime();
 				if(arrival > 0) {
+					if(minimized.getIndex() == 0)
+						minimized.initialProcess(new Process(0, 0, 0, 0));
+					else
+						minimized.enqueue(new Process(0, 0, 0, 0));
 					while(arrival > 0) {
 						if(valid.getIndex() == 0)
 							valid.initialProcess(new Process(0, 0, 0, 0));
@@ -180,19 +185,32 @@ public class QueuesPanel extends JPanel {
 			if(after.getProcessID() != before.getProcessID() && before.getBurstTime() == 0) {
 				if(after.getArrivalTime() > combi1) {
 					interval = after.getArrivalTime() - combi1;
+					minimized.enqueue(new Process(0, 0, 0, 0));
 					for(int i = 0; i < interval; i++) {
 						valid.enqueue(new Process(0, 0, 0, 0));
 						combi1++;
 					}
 				} else {
 					valid.enqueue(after);
+					minimized.enqueue(after);
 					combi1++;
 				}
+				// System.out.print("|");
 			} else {
 				if(valid.getIndex() == 0)
 					valid.initialProcess(after);
 				else
 					valid.enqueue(after);
+
+				if(after.getProcessID() != before.getProcessID()) {
+					if(minimized.getIndex() == 0)
+						minimized.initialProcess(before);
+					else
+						minimized.enqueue(before);
+				}
+
+				if(printable.getIndex() == 0)
+					minimized.enqueue(after);
 
 				combi1++;
 			}
@@ -207,6 +225,12 @@ public class QueuesPanel extends JPanel {
 		// 	combi1--;
 		// }
 
+		// System.out.println("\n");
+		// while(minimized.getIndex() > 0) {
+		// 	System.out.print("P" + minimized.dequeue().getProcessID() + " ");
+		// }
+
+		// int maxBurstTime = minimized.getIndex();
 		int maxBurstTime = valid.getIndex();
 		int index = 0;
 		int x1 = maxBurstTime * 40;
@@ -237,7 +261,7 @@ public class QueuesPanel extends JPanel {
 		new Thread() {
 			public void run() {
 				int x = 0, maxi = 0;
-				Process assign = null;
+				Process assign = null, min = minimized.dequeue();
 				try {
 					for(int i = 0; i < combi; i++) {
 						assign = valid.dequeue();

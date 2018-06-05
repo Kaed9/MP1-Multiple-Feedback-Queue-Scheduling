@@ -198,9 +198,9 @@ public class SummaryPanel extends JPanel {
 		int[] tTime = new int[completion.length];
 		System.out.println();
 		for(int i = 0; i < completion.length; i++) {
-			if(algo.equals("Round Robin"))
-				tTime[i] = completion[i];
-			else
+			// if(algo.equals("Round Robin"))
+			// 	tTime[i] = completion[i];
+			// else
 				tTime[i] = completion[i] - arrivalTime[i];
 		}
 

@@ -1,9 +1,10 @@
 public class CPUSched {
 	private Queue queue = new Queue();
 	private final Process[] process;
-	private Process[] copy;
-
+	private Process[] copy, other;
+	
 	private QueuesPanel queuesPanel;
+	private boolean isMLFQ = false;
 	
 	public CPUSched(Process[] process) {
 		this.process = process;
@@ -22,7 +23,12 @@ public class CPUSched {
 	//CPU Scheduling Algorithm
 	public Queue FCFS(){
 		// check();
-		Process[] temp = process;
+		Process[] temp;
+		if(isMLFQ == false){
+			temp = process;
+		}else{
+			temp = other;
+		}
 		//sort arrival Time
 		quicksort(temp, 0, temp.length-1, 0);
 		/*
@@ -105,7 +111,12 @@ public class CPUSched {
 	}
 	
 	public Queue SJF(){
-		Process[] temp = process;
+		Process[] temp;
+		if(isMLFQ == false){
+			temp = process;
+		}else{
+			temp = other;
+		}
 		Process[] sample = new Process[process.length];
 		int burst[] = new int[process.length], last = 0, arrival[] = new int[process.length];
 		boolean isAvailable[] = new boolean[process.length];
@@ -204,7 +215,12 @@ public class CPUSched {
 	}
 	
 	public Queue SRTF(){
-		Process[] temp = process;
+		Process[] temp;
+		if(isMLFQ == false){
+			temp = process;
+		}else{
+			temp = other;
+		}
 		boolean[] isAvailable = new boolean[temp.length];
 		int[] burst = new int[temp.length], tempB = new int[temp.length], arrival = new int[temp.length];
 		
@@ -288,7 +304,12 @@ public class CPUSched {
 	}
 	
 	public Queue NPrio(){
-		Process[] temp = process;	
+		Process[] temp;
+		if(isMLFQ == false){
+			temp = process;
+		}else{
+			temp = other;
+		}
 		Process[] sample = new Process[process.length];
 		int last = 0, prio[] = new int[process.length];
 		
@@ -377,7 +398,12 @@ public class CPUSched {
 	}
 	
 	public Queue Prio(){			
-		Process[] temp = process;
+		Process[] temp;
+		if(isMLFQ == false){
+			temp = process;
+		}else{
+			temp = other;
+		}
 		boolean isAvailable[] = new boolean[temp.length], flag2=false;
 		int[] burst = new int[temp.length], tempB = new int[temp.length], prio = new int[temp.length], arrival = new int[temp.length];
 			
@@ -476,8 +502,17 @@ public class CPUSched {
 	}
 
 	public Queue RR(int quantumTime) {
-
-		Process[] temp = process, temp1 = process;
+	
+		Process[] temp, temp1;
+		// Process[] temp;
+		if(isMLFQ == false){
+			temp = process;
+			temp1 = process;
+		}else{
+			temp = other;
+			temp1 = other;
+		}
+		
 		Process usable = null;
 		Queue queue1 = new Queue();
 		Queue queue2 = new Queue();
@@ -603,7 +638,95 @@ public class CPUSched {
 		return printable;
 	}
 	
-	//other methods
+	public void MLFQ(int[] sched, int[] timeq){ // MLFQ({num sched, timeq}) note: timeq = -1; if not RR
+		int index  = 0;
+		System.out.println("MLFQ");
+		Process temp[] = process;
+		int burst[] = new int[temp.length];
+		int qnum[] = new int[temp.length]; //ikangain na queue hiya		
+		Queue q[] = new Queue[sched.length];
+		Queue qother = new Queue();
+		quicksort(temp, 0, temp.length-1, 0); //sort arrival
+		
+		//initialize
+		for(int i = 0; i < temp.length; i++){
+			burst[i] = temp[i].getBurstTime();
+			qnum[i] = 0;			
+		}
+		
+		for(int i = 0; i < sched.length; i++){
+			q[i] = new Queue();
+		}
+		
+		int n = 0;
+		for(int i = 0; i < sched.length; i++){
+			if(sched[0] != 5){		//if not RR
+				q[i] = Qpriority(sched[i]);		
+				break;	
+			}else{
+				for(int j = 0; j < temp.length; j++){
+					if(timeq[i] != -1){					
+						if(burst[j] > timeq[i] && qnum[j] == i){						
+							if(q[i].getIndex() == 0){
+								q[i].initialProcess(temp[j]); //naexceptio naliwat
+								System.out.print(temp[j].getProcessID()+" ");
+							}else{
+								q[i].enqueue(temp[j]);
+								System.out.print(temp[j].getProcessID()+" ");
+							}
+							burst[j]-=timeq[i];
+							qnum[j]++; //demote							
+						}else{
+							continue;
+						}
+					}else{
+						//dapat same i
+						if(qnum[j] == i){
+							if(n == 0){
+								qother.initialProcess(temp[j]);	
+							}else{
+								qother.enqueue(temp[j]);
+							}
+							n++;
+							
+							if(j == temp.length-1){
+								other = qother.getProcess();
+								isMLFQ = true;
+								q[i] = Qpriority(sched[i]); 
+								//break;
+								//paano pagbreak na inner loop la??
+							}
+						}											
+					}
+					index++;
+				}
+			}
+		}
+	}
+	
+	
+	//other methods: pag balhin ha other sched
+	public Queue Qpriority(int i){
+		Queue q = new Queue();
+		if(i == 0){
+			q = FCFS();
+			System.out.print(" FCFS ");
+		}else if(i == 1){
+			q = SJF();
+			System.out.print(" SJF ");
+		}else if(i == 2){
+			q = SRTF();
+			System.out.print(" SRTF ");
+		}else if(i == 3){
+			q = NPrio();
+			System.out.print(" NPrio ");
+		}else if(i == 4){
+			q = Prio();
+			System.out.print(" Prio ");
+		}
+		return q;
+	}
+	
 	public int getSmallestNum(int num[], int c){
 		int temp = -1; boolean flag = false;
 		
@@ -656,7 +779,7 @@ public class CPUSched {
 		return count;
 	}
 	
-	public void quicksort(Process p[], int low, int high, int c) {
+	public Process[] quicksort(Process p[], int low, int high, int c) {
 		int i = low, j = high;
 		
 		Process pivot = p[low + (high-low)/2];
@@ -716,6 +839,7 @@ public class CPUSched {
 		if(i < high)
 			quicksort(p,i, high, c);
 		
+		return p;
 	}
 	
 	private void swap(Process arr[], int i, int j){
@@ -810,7 +934,8 @@ public class CPUSched {
 		// System.out.println("\nPrio"); // adjust burst time
 		// sched.Prio();
 		System.out.println("\nRound Robin");
-		sched.RR(2);
+		int s[] = {5, 5, 1}, t[] = {2, 3, -1};
+		sched.MLFQ(s, t);
 		
 		int num[] = {1, 0, 0, 0, 0, 0,0};
 		

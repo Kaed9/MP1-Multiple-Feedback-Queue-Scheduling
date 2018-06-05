@@ -14,13 +14,18 @@ public class ProcessControlBlock extends JPanel {
 	private JScrollPane[] scrollPane;
 	private JScrollBar bar;
 	
+	// private String[] string = {"<html><div style = 'text-align: center;'>PID</div></html>", 
+	// 						   "<html><div style = 'text-align: center;'>Arrival<br/>Time</div></html>",
+	// 						   "<html><div style = 'text-align: center;'>CPU<br/>Burst<br/>Time</div></html>",
+	// 						   "<html><div style = 'text-align: center;'>Priority</div></html>",
+	// 						   "<html><div style = 'text-align: center;'>Execution<br/>History<br/>Information</div></html>", ""};
 	private String[] string = {"<html><div style = 'text-align: center;'>PID</div></html>", 
 							   "<html><div style = 'text-align: center;'>Arrival<br/>Time</div></html>",
 							   "<html><div style = 'text-align: center;'>CPU<br/>Burst<br/>Time</div></html>",
-							   "<html><div style = 'text-align: center;'>Priority</div></html>",
-							   "<html><div style = 'text-align: center;'>Execution<br/>History<br/>Information</div></html>", ""};
+							   "<html><div style = 'text-align: center;'>Priority</div></html>", ""};
 	private int count = 0;
-	private int[] sizes = {60, 92, 72, 92, 124, 20};
+	private int[] sizes = {91, 123, 103, 123, 20};
+	// private int[] sizes = {60, 92, 72, 92, 124, 20};
 	
 	public AdjustmentListener listener = new MyAdjustmentListener();
 	
@@ -106,11 +111,11 @@ public class ProcessControlBlock extends JPanel {
 	
 	public void processPane() {
 		
-		panel = new JPanel[6];
-		table = new JTextArea[6];
-		scrollPane = new JScrollPane[6];
+		panel = new JPanel[5];
+		table = new JTextArea[5];
+		scrollPane = new JScrollPane[5];
 		
-		for(int i = 0; i < 6; i++) {
+		for(int i = 0; i < 5; i++) {
 			JLabel label1 = new JLabel(string[i], SwingConstants.CENTER);
 			label1.setFont(font1);
 			label1.setBounds(0, 0, sizes[i], 70);
@@ -128,7 +133,7 @@ public class ProcessControlBlock extends JPanel {
 			table[i].setFont(font2);
 			table[i].setEditable(false);
 			
-			if(i != 5) {
+			if(i != 4) {
 				scrollPane[i] = new JScrollPane(table[i], JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 				// panel[i].add(scrollPane[i], BorderLayout.CENTER);
 			} else {
@@ -147,10 +152,10 @@ public class ProcessControlBlock extends JPanel {
 			scrollPane[i].setBorder(BorderFactory.createEmptyBorder());
 			panel[i].add(scrollPane[i]);
 			panel[i].setBackground(Color.WHITE);
-			if(i > 0 && i < 5) {
+			if(i > 0 && i < 4) {
 				panel[i].setBorder(BorderFactory.createMatteBorder(1, 0, 0, 1, Color.BLACK));
 				scrollPane[i].setBorder(BorderFactory.createMatteBorder(1, 0, 1, 1, Color.BLACK));
-			} else if(i == 5) {
+			} else if(i == 4) {
 				panel[i].setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 				scrollPane[i].setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.BLACK));
 			} else if (i == 0) {
@@ -171,7 +176,7 @@ public class ProcessControlBlock extends JPanel {
 		public void adjustmentValueChanged(AdjustmentEvent e) {
 			
 			if(e.getSource() == bar && e.getAdjustmentType() == AdjustmentEvent.TRACK) {
-				for(int i = 0; i < 5; i++) {
+				for(int i = 0; i < 4; i++) {
 					scrollPane[i].getVerticalScrollBar().setValue(e.getValue());
 				}
 			}
@@ -231,11 +236,11 @@ public class ProcessControlBlock extends JPanel {
 
 		for(int i = 0; i < maxProcesses; i++) {
 			// System.out.println(processList[i].getProcessID() + "\t" + processList[i].getArrivalTime() + "\t" +  processList[i].getBurstTime() + "\t" +  processList[i].getPriority() + "\t" +  processList[i].getHistoryInfo());
-			table[0].append("   " + processList[i].getProcessID() + "\n");
-			table[1].append("      " + processList[i].getArrivalTime() + "\n");
-			table[2].append("    " + processList[i].getBurstTime() + "\n");
-			table[3].append("      " + processList[i].getPriority() + "\n");
-			table[4].append("          " + processList[i].getHistoryInfo() + "\n");
+			table[0].append("      " + processList[i].getProcessID() + "\n");
+			table[1].append("         " + processList[i].getArrivalTime() + "\n");
+			table[2].append("       " + processList[i].getBurstTime() + "\n");
+			table[3].append("         " + processList[i].getPriority() + "\n");
+			// table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 		}
 		// }
 	}
@@ -351,7 +356,7 @@ public class ProcessControlBlock extends JPanel {
 			table[1].append("      " + processList[i].getArrivalTime() + "\n");
 			table[2].append("    " + processList[i].getBurstTime() + "\n");
 			table[3].append("      " + processList[i].getPriority() + "\n");
-			table[4].append("          " + processList[i].getHistoryInfo() + "\n");
+			// table[4].append("          " + processList[i].getHistoryInfo() + "\n");
 		}
 
 		return processList.length;
@@ -364,7 +369,7 @@ public class ProcessControlBlock extends JPanel {
 
 	public void clearTables() {
 
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 4; i++) {
 			table[i].setText("");
 		}
 	}
